@@ -55,7 +55,8 @@ class MainActivity : ComponentActivity() {
                                 style = TextStyle(
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-                                )
+
+                                    )
                             )
                             Spacer(Modifier.weight(1f))
                         }
@@ -76,46 +77,51 @@ fun GenerateChords(liste: ArrayList<Accord>) {
     var usedChords = ArrayList<Accord>()
 
     for (i in 1..4) {
-        var chord = liste[(0..liste.size).random()]
+
+        var chord = liste[(0..liste.size-1).random()]
         if (usedChords.size != 0) {
             while (usedChords.contains(chord) && usedChords[0].getGamme()
                     .contains(chord.getNom())
             ) {
-                chord = liste[(0..liste.size).random()]
+                chord = liste[(0..liste.size-1).random()]
             }
         }
 
         usedChords.add(chord)
-        if (i == 1 || i == 3) {
-            Row {
-                Column {
-                    Image(
-                        painterResource(id = chord.getTab()),
-                        chord.getNom(),
-                        modifier = Modifier.size(150.dp)
-                    )
 
-                    Text(
-                        chord.getNom(),
-                        Modifier.padding(horizontal = 65.dp),
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                    )
-                }
-            }
-        } else {
+    }
+    Row {
+        for (i in 0..1) {
             Column {
                 Image(
-                    painterResource(id = chord.getTab()),
-                    chord.getNom(),
+                    painterResource(id = usedChords[i].getTab()),
+                    usedChords[i].getNom(),
                     modifier = Modifier.size(150.dp)
                 )
 
                 Text(
-                    chord.getNom(),
+                    usedChords[i].getNom(),
+                    Modifier.padding(horizontal = 65.dp),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        }
+    }
+    Row {
+        for (i in 2..3) {
+            Column {
+                Image(
+                    painterResource(id = usedChords[i].getTab()),
+                    usedChords[i].getNom(),
+                    modifier = Modifier.size(150.dp)
+                )
+
+                Text(
+                    usedChords[i].getNom(),
                     Modifier.padding(horizontal = 65.dp),
                     style = TextStyle(
                         fontSize = 20.sp,
@@ -128,6 +134,7 @@ fun GenerateChords(liste: ArrayList<Accord>) {
     }
 
 }
+
 
 @Composable
 fun HomePage(liste: ArrayList<Accord>) {
