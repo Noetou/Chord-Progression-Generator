@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.shape.CutCornerShape
@@ -53,8 +55,7 @@ class MainActivity : ComponentActivity() {
                                 style = TextStyle(
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-
-                                    )
+                                )
                             )
                             Spacer(Modifier.weight(1f))
                         }
@@ -74,14 +75,38 @@ class MainActivity : ComponentActivity() {
 fun GenerateChords(liste: ArrayList<Accord>) {
     var usedChords = ArrayList<Accord>()
 
-
-    Row {
-        for (i in 1..4) {
-            var chord = liste[(0..7).random()]
-            while (usedChords.contains(chord)) {
-                chord = liste[(0..7).random()]
+    for (i in 1..4) {
+        var chord = liste[(0..liste.size).random()]
+        if (usedChords.size != 0) {
+            while (usedChords.contains(chord) && usedChords[0].getGamme()
+                    .contains(chord.getNom())
+            ) {
+                chord = liste[(0..liste.size).random()]
             }
-            usedChords.add(chord)
+        }
+
+        usedChords.add(chord)
+        if (i == 1 || i == 3) {
+            Row {
+                Column {
+                    Image(
+                        painterResource(id = chord.getTab()),
+                        chord.getNom(),
+                        modifier = Modifier.size(150.dp)
+                    )
+
+                    Text(
+                        chord.getNom(),
+                        Modifier.padding(horizontal = 65.dp),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
+            }
+        } else {
             Column {
                 Image(
                     painterResource(id = chord.getTab()),
@@ -89,10 +114,16 @@ fun GenerateChords(liste: ArrayList<Accord>) {
                     modifier = Modifier.size(150.dp)
                 )
 
-                Text(chord.getNom(), Modifier.padding(horizontal = 65.dp), style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center))
+                Text(
+                    chord.getNom(),
+                    Modifier.padding(horizontal = 65.dp),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                )
             }
-
-
         }
     }
 
@@ -122,7 +153,7 @@ fun HomePage(liste: ArrayList<Accord>) {
                 } else {
                     etat.value++
                 }
-            }, shape = CutCornerShape(10)) {
+            }, shape = CutCornerShape(10), modifier = Modifier.width(300.dp)) {
                 Text("Générer")
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -167,21 +198,20 @@ fun generateChordList(): ArrayList<Accord> {
 
     val chordList = ArrayList<Accord>()
 
-    val compatibleMap = HashMap<Accord,ArrayList<String>>()
-    compatibleMap.put(Accord("A", R.drawable.a_major), arrayListOf(""))
-    compatibleMap.put(Accord("Am", R.drawable.a_minor), arrayListOf(""))
-    compatibleMap.put(Accord("B", R.drawable.b_major), arrayListOf(""))
-    compatibleMap.put(Accord("Bm", R.drawable.b_minor), arrayListOf(""))
-    compatibleMap.put(Accord("C", R.drawable.c_major), arrayListOf(""))
-    compatibleMap.put(Accord("Cm", R.drawable.c_minor), arrayListOf(""))
-    compatibleMap.put(Accord("D", R.drawable.d_major), arrayListOf(""))
-    compatibleMap.put(Accord("Dm", R.drawable.d_minor), arrayListOf(""))
-    compatibleMap.put(Accord("E", R.drawable.e_major), arrayListOf(""))
-    compatibleMap.put(Accord("Em", R.drawable.e_minor), arrayListOf(""))
-    compatibleMap.put(Accord("F", R.drawable.f_major), arrayListOf(""))
-    compatibleMap.put(Accord("Fm", R.drawable.f_minor), arrayListOf(""))
-    compatibleMap.put(Accord("G", R.drawable.g_major), arrayListOf(""))
-    compatibleMap.put(Accord("Gm", R.drawable.g_minor), arrayListOf(""))
+    chordList.add(Accord("A", R.drawable.a_major, arrayListOf<String>("Bm,D,E")))
+    chordList.add(Accord("Am", R.drawable.a_minor, arrayListOf<String>("C,Dm,Em,F,G")))
+    chordList.add(Accord("B", R.drawable.b_major, arrayListOf<String>("E")))
+    chordList.add(Accord("Bm", R.drawable.b_minor, arrayListOf<String>("D,Em,G,A")))
+    chordList.add(Accord("C", R.drawable.c_major, arrayListOf<String>("Dm,Em,F,G,Am")))
+    chordList.add(Accord("Cm", R.drawable.c_minor, arrayListOf<String>("Cm,Fm,Gm")))
+    chordList.add(Accord("D", R.drawable.d_major, arrayListOf<String>("Em,G,A,Bm")))
+    chordList.add(Accord("Dm", R.drawable.d_minor, arrayListOf<String>("F,Gm,Am,C")))
+    chordList.add(Accord("E", R.drawable.e_major, arrayListOf<String>("A,B")))
+    chordList.add(Accord("Em", R.drawable.e_minor, arrayListOf<String>("G,Am,Bm,C,D")))
+    chordList.add(Accord("F", R.drawable.f_major, arrayListOf<String>("Gm,Am,Cm,Dm")))
+    chordList.add(Accord("Fm", R.drawable.f_minor, arrayListOf<String>("Cm")))
+    chordList.add(Accord("G", R.drawable.g_major, arrayListOf<String>("Am,Bm,C,D,Em")))
+    chordList.add(Accord("Gm", R.drawable.g_minor, arrayListOf<String>("Cm,Dm,F")))
 
 
     return chordList

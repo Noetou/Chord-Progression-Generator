@@ -3,9 +3,8 @@ package com.example.test
 class Accord(
     private val nom: String,
     private val tab: Int,
-    private var gammeMajeure: ArrayList<String>,
-    private var gammeMineure: ArrayList<String>)
-{
+    private var gamme: ArrayList<String>,
+) {
 
 
     fun getNom(): String {
@@ -16,12 +15,9 @@ class Accord(
         return tab
     }
 
-    fun getGammeMajeure(): ArrayList<String> {
-        return gammeMajeure
+    fun getGamme(): ArrayList<String> {
+        return gamme
     }
 
-    fun getGammeMineure(): ArrayList<String> {
-        return gammeMineure
-    }
 
 }
