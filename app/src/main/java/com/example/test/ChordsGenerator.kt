@@ -90,48 +90,51 @@ fun GenerateChords(liste: ArrayList<Accord>) {
         usedChords.add(chord)
 
     }
-    Row {
-        for (i in 0..1) {
-            Column {
-                Image(
-                    painterResource(id = usedChords[i].getTab()),
-                    usedChords[i].getNom(),
-                    modifier = Modifier.size(150.dp)
-                )
-
-                Text(
-                    usedChords[i].getNom(),
-                    Modifier.padding(horizontal = 65.dp),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+    Column {
+        Row {
+            for (i in 0..1) {
+                Column {
+                    Image(
+                        painterResource(id = usedChords[i].getTab()),
+                        usedChords[i].getNom(),
+                        modifier = Modifier.size(150.dp)
                     )
-                )
+
+                    Text(
+                        usedChords[i].getNom(),
+                        Modifier.padding(horizontal = 65.dp),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
+            }
+        }
+        Row {
+            for (i in 2..3) {
+                Column {
+                    Image(
+                        painterResource(id = usedChords[i].getTab()),
+                        usedChords[i].getNom(),
+                        modifier = Modifier.size(150.dp)
+                    )
+
+                    Text(
+                        usedChords[i].getNom(),
+                        Modifier.padding(horizontal = 65.dp),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
             }
         }
     }
-    Row {
-        for (i in 2..3) {
-            Column {
-                Image(
-                    painterResource(id = usedChords[i].getTab()),
-                    usedChords[i].getNom(),
-                    modifier = Modifier.size(150.dp)
-                )
 
-                Text(
-                    usedChords[i].getNom(),
-                    Modifier.padding(horizontal = 65.dp),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                )
-            }
-        }
-    }
 
 }
 
