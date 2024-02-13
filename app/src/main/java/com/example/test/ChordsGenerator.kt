@@ -80,19 +80,25 @@ fun GenerateChords(liste: ArrayList<Accord>) {
 
     for (i in 1..4) {
 
-        var chord = liste[(0..liste.size - 1).random()]
+        var chord = liste[(0..<liste.size).random()]
         if (usedChords.size != 0) {
-            while (usedChords.contains(chord) && !usedChords[0].getGamme()
-                    .contains(chord.getNom())
+
+            while (usedChords.contains(chord) || !usedChords[0].getGamme().contains(chord.getNom())
             ) {
-                chord = liste[(0..liste.size - 1).random()]
+
+                val chordName =
+                    usedChords[0].getGamme()[(0..<usedChords[0].getGamme().size).random()]
+                for (accord in liste) {
+                    if (accord.getNom() == chordName) {
+                        chord = accord
+                    }
+                }
             }
         }
 
         usedChords.add(chord)
-
     }
-    // create components : 2 row of 2 chords with their tabs
+// create components : 2 row of 2 chords with their tabs
     Column {
         Row {
             for (i in 0..1) {
