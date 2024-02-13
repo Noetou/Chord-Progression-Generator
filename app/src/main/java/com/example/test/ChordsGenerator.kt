@@ -92,6 +92,7 @@ fun GenerateChords(liste: ArrayList<Accord>) {
         usedChords.add(chord)
 
     }
+    // create components : 2 row of 2 chords with their tabs
     Column {
         Row {
             for (i in 0..1) {

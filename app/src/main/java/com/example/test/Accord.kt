@@ -20,8 +20,7 @@ class Accord(
     }
 
     fun addGamme(chord: String){
-        if(!gamme.contains(chord))
-            gamme.add(chord)
+        gamme.add(chord)
     }
 
 }
