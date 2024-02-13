@@ -78,12 +78,12 @@ fun GenerateChords(liste: ArrayList<Accord>) {
 
     for (i in 1..4) {
 
-        var chord = liste[(0..liste.size-1).random()]
+        var chord = liste[(0..liste.size - 1).random()]
         if (usedChords.size != 0) {
-            while (usedChords.contains(chord) && usedChords[0].getGamme()
+            while (usedChords.contains(chord) && !usedChords[0].getGamme()
                     .contains(chord.getNom())
             ) {
-                chord = liste[(0..liste.size-1).random()]
+                chord = liste[(0..liste.size - 1).random()]
             }
         }
 
@@ -222,7 +222,15 @@ fun generateChordList(): ArrayList<Accord> {
     chordList.add(Accord("Fm", R.drawable.f_minor, arrayListOf<String>("Cm")))
     chordList.add(Accord("G", R.drawable.g_major, arrayListOf<String>("Am,Bm,C,D,Em")))
     chordList.add(Accord("Gm", R.drawable.g_minor, arrayListOf<String>("Cm,Dm,F")))
-
+    for (chord in chordList) {
+        for (i in 0..chordList.size - 1) {
+            if (chordList[i].getGamme().contains(chord.getNom()) && !chord.getGamme()
+                    .contains(chordList[i].getNom())
+            ) {
+                chord.addGamme(chordList[i].getNom())
+            }
+        }
+    }
 
     return chordList
 }
