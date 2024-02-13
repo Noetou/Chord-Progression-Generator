@@ -152,27 +152,39 @@ fun ChoseOneChord(
 }
 
 @Composable
-fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord : Accord?) {
+fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord : Accord?,secondChord : Accord?,thirdChord : Accord?,fourthChord : Accord?) {
     val usedChords = ArrayList<Accord>()
     if(firstChord != null){
         usedChords.add(firstChord)
     }
-    for (i in 1..nbChordsToGenerate) {
-        var chord = liste[(0..<liste.size).random()]
-        if (usedChords.size != 0) {
-            while (usedChords.contains(chord) || !usedChords[0].getGamme().contains(chord.getNom())
-            ) {
-                val chordName =
-                    usedChords[0].getGamme()[(0..<usedChords[0].getGamme().size).random()]
-                for (accord in liste) {
-                    if (accord.getNom() == chordName) {
-                        chord = accord
+    if(secondChord != null){
+        usedChords.add(secondChord)
+    }
+    if(thirdChord != null){
+        usedChords.add(thirdChord)
+    }
+    if(fourthChord != null){
+        usedChords.add(fourthChord)
+    }
+    else{
+        for (i in 1..nbChordsToGenerate) {
+            var chord = liste[(0..<liste.size).random()]
+            if (usedChords.size != 0) {
+                while (usedChords.contains(chord) || !usedChords[0].getGamme().contains(chord.getNom())
+                ) {
+                    val chordName =
+                        usedChords[0].getGamme()[(0..<usedChords[0].getGamme().size).random()]
+                    for (accord in liste) {
+                        if (accord.getNom() == chordName) {
+                            chord = accord
+                        }
                     }
                 }
             }
+            usedChords.add(chord)
         }
-        usedChords.add(chord)
     }
+
 // create components : 2 row of 2 chords with their tabs
     LazyHorizontalGrid(rows = GridCells.Fixed(2), modifier = Modifier.height(400.dp)) {
 
@@ -201,12 +213,15 @@ fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord
 @Composable
 fun HomePage(liste: ArrayList<Accord>) {
     val etat = remember { mutableIntStateOf(0) }
-    val selectedChord = remember { mutableStateOf<Accord?>(null) }
+    val firstChord = remember { mutableStateOf<Accord?>(null) }
+    val secondChord = remember { mutableStateOf<Accord?>(null) }
+    val thirdChord = remember { mutableStateOf<Accord?>(null) }
+    val fourthChord = remember { mutableStateOf<Accord?>(null) }
     val showDialog = remember { mutableStateOf(false) }
     var nbChordsToGenerate = remember { mutableIntStateOf(4) }
     val closeDialog:() -> Unit = { showDialog.value = false}
     val selectChord:(Accord)-> Unit = { accord ->
-        selectedChord.value = accord
+        firstChord.value = accord
         showDialog.value = false
     }
     Column(
@@ -217,18 +232,16 @@ fun HomePage(liste: ArrayList<Accord>) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text("Choisir le premier accord")
-            if(selectedChord.value != null){
-                Text(text = "(Actuel : ${selectedChord.value!!.getNom()} )")
+            if(firstChord.value != null){
+                Text(text = "(Actuel : ${firstChord.value!!.getNom()} )")
             }
         }
 
         //show chords list and allow the user to choose the first chord of the progression
-        Log.d("nbChordsToGenerate","$nbChordsToGenerate")
         if (showDialog.value) {
             ChoseOneChord(liste,closeDialog,selectChord)
             if(nbChordsToGenerate.intValue == 4 )
             nbChordsToGenerate.intValue--;
-
         }
 
         //if the button has already been pressed, replace the previous chords with new ones
@@ -236,7 +249,7 @@ fun HomePage(liste: ArrayList<Accord>) {
             Spacer(modifier = Modifier.weight(1f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
-                GenerateChords(liste, nbChordsToGenerate.intValue,selectedChord.value)
+                GenerateChords(liste, nbChordsToGenerate.intValue,firstChord.value,secondChord.value,thirdChord.value,fourthChord.value)
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
