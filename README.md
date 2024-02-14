@@ -10,7 +10,7 @@ Appuyez à nouveau le bouton afin de générer une nouvelle suite d'accord !
 
 Appuyez sur l'une des 4 emplacements afin de choisir un accord à y placer
 
-** ⚠️ Le premier accord (en haut à gauche) défini la gamme de la progression ⚠️ **
+**⚠️ Le premier accord (en haut à gauche) défini la gamme de la progression ⚠️**
 
 
 
@@ -25,4 +25,4 @@ Press the button again to generate a new chord progression!
 
 Press one of the 4 slots to choose a chord to place there
 
-** ⚠️ The first chord (top left) defines the scale of the progression  ⚠️ **
+**⚠️ The first chord (top left) defines the scale of the progression  ⚠️**
