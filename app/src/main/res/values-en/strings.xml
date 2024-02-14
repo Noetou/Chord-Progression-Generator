@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_main">Chord Generator</string>
     <string name="app_name">Chords Generator</string>
@@ -7,5 +8,4 @@
     <string name="none">None</string>
     <string name="chose_chord">Choose a chord</string>
     <string name="close">Close</string>
-
 </resources>

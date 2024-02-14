@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Spacer(Modifier.weight(1f))
                             Text(
-                                "Générateur d'accord",
+                                "${R.string.title}",
                                 style = TextStyle(
                                     fontSize = 24.sp,
                                     fontFamily = FontFamily.Serif,
@@ -84,6 +84,7 @@ class MainActivity : ComponentActivity() {
                             )
                             Spacer(Modifier.weight(1f))
                         }
+                        Spacer(Modifier.weight(1f))
                         Spacer(Modifier.weight(1f))
                         HomePage(chordList)
 
@@ -115,7 +116,7 @@ fun GreetingPreview() {
                 ) {
                     Spacer(Modifier.weight(1f))
                     Text(
-                        "Générateur d'accord",
+                        "${R.string.title}",
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontFamily = FontFamily.Serif,
@@ -144,7 +145,7 @@ fun ChoseOneChord(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Choisir un accord") },
+        title = { Text("${R.string.chose_chord}") },
         text = {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(5),
@@ -173,7 +174,7 @@ fun ChoseOneChord(
                 }
                 item {
                     Text(
-                        text = "Aucun",
+                        text = "${R.string.none}",
                         style = TextStyle(fontWeight = FontWeight.ExtraBold),
                         modifier = Modifier.clickable {
                             onSelect(null)
@@ -186,7 +187,7 @@ fun ChoseOneChord(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
             ) {
-                Text("Fermer")
+                Text("${R.string.close}")
             }
         },
         modifier = Modifier
@@ -354,7 +355,7 @@ fun HomePage(liste: ArrayList<Accord>) {
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
                     ) {
                         Text(
-                            "Réinitialiser",
+                            "${R.string.reset}",
                             style = TextStyle(
                                 fontFamily = FontFamily.Serif,
                                 color = Color(0xFF252B48)
@@ -377,7 +378,7 @@ fun HomePage(liste: ArrayList<Accord>) {
                         modifier = Modifier.width(300.dp)
                     ) {
                         Text(
-                            "Générer", style = TextStyle(
+                            "${R.string.generate}", style = TextStyle(
                                 fontFamily = FontFamily.Serif,
                                 color = Color(0xFF252B48)
                             )
