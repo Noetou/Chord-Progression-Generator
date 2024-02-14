@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -107,11 +108,11 @@ fun GreetingPreview() {
 fun ChoseOneChord(
     liste: ArrayList<Accord>,
     onDismiss: () -> Unit,
-    onSelect: (Accord?) -> Unit
+    onSelect: (Accord?) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Choisir le premier accord") },
+        title = { Text("Choisir un accord") },
         text = {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(5),
@@ -167,7 +168,7 @@ fun GenerateChords(
     thirdChord: Accord?,
     fourthChord: Accord?,
     generate: Int,
-    openDialog: () -> Unit
+    openDialog: (Int) -> Unit
 ) {
     val usedChords = ArrayList<Accord?>()
     usedChords.add(firstChord)
@@ -201,19 +202,19 @@ fun GenerateChords(
 // create components : 2 row of 2 chords with their tabs
     LazyHorizontalGrid(rows = GridCells.Fixed(2), modifier = Modifier.height(400.dp)) {
 
-        items(usedChords) {
+        itemsIndexed(usedChords) { index, chord ->
             Column {
-                if (it != null) {
+                if (chord != null) {
                     Image(
-                        painterResource(id = it.getTab()),
-                        it.getNom(),
+                        painterResource(id = chord.getTab()),
+                        chord.getNom(),
                         modifier = Modifier
                             .size(150.dp)
-                            .clickable { openDialog() }
+                            .clickable { openDialog(index) }
                     )
 
                     Text(
-                        it.getNom(),
+                        chord.getNom(),
                         Modifier.padding(horizontal = 65.dp),
                         style = TextStyle(
                             fontSize = 20.sp,
@@ -227,7 +228,7 @@ fun GenerateChords(
                         "chord 1",
                         modifier = Modifier
                             .size(150.dp)
-                            .clickable { openDialog() }
+                            .clickable { openDialog(index) }
                     )
                 }
             }
@@ -244,11 +245,27 @@ fun HomePage(liste: ArrayList<Accord>) {
     val thirdChord = remember { mutableStateOf<Accord?>(null) }
     val fourthChord = remember { mutableStateOf<Accord?>(null) }
     val dialog = remember { mutableStateOf(false) }
+    val emplacement = remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
     val closeDialog: () -> Unit = { dialog.value = false }
-    val openDialog: () -> Unit = { dialog.value = true }
+    val openDialog: (Int) -> Unit = {
+        dialog.value = true
+        emplacement.intValue = it
+    }
+
     val selectChord: (Accord?) -> Unit = { accord ->
-        firstChord.value = accord
+        if(emplacement.intValue == 0){
+            firstChord.value = accord
+        }
+        else if(emplacement.intValue ==1){
+            secondChord.value = accord
+        }
+        else if(emplacement.intValue == 2){
+            thirdChord.value = accord
+        }
+        else{
+            fourthChord.value = accord
+        }
         dialog.value = false
     }
 
