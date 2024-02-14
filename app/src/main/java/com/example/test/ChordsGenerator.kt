@@ -176,7 +176,7 @@ fun GenerateChords(
     usedChords.add(thirdChord)
     usedChords.add(fourthChord)
 
-    if (generate>0) {
+    if (generate > 0) {
         for (i in 0..3) {
             if (usedChords[i] == null) {
                 var chord = liste[(0..<liste.size).random()]
@@ -190,6 +190,14 @@ fun GenerateChords(
                         for (accord in liste) {
                             if (accord.getNom() == chordName) {
                                 chord = accord
+                            }
+                        }
+                    }
+                } else if (usedChords[1] != null || usedChords[2] != null || usedChords[3] != null) {
+                    for (accord in usedChords) {
+                        if(accord != null){
+                            while(!chord.getGamme().contains(accord.getNom())){
+                               chord = liste[(0..<liste.size).random()]
                             }
                         }
                     }
@@ -236,7 +244,7 @@ fun GenerateChords(
     }
 }
 
-
+// create the page each time the activity is refreshed
 @Composable
 fun HomePage(liste: ArrayList<Accord>) {
     val generate = remember { mutableIntStateOf(0) }
@@ -254,16 +262,13 @@ fun HomePage(liste: ArrayList<Accord>) {
     }
 
     val selectChord: (Accord?) -> Unit = { accord ->
-        if(emplacement.intValue == 0){
+        if (emplacement.intValue == 0) {
             firstChord.value = accord
-        }
-        else if(emplacement.intValue ==1){
+        } else if (emplacement.intValue == 1) {
             secondChord.value = accord
-        }
-        else if(emplacement.intValue == 2){
+        } else if (emplacement.intValue == 2) {
             thirdChord.value = accord
-        }
-        else{
+        } else {
             fourthChord.value = accord
         }
         dialog.value = false
