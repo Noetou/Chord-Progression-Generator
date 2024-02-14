@@ -5,11 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,10 +22,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +40,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +63,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Column {
                         Row {
-                            Spacer(Modifier.weight(1f))
                             Text(
                                 "Générateur d'accord",
                                 style = TextStyle(
@@ -61,9 +71,7 @@ class MainActivity : ComponentActivity() {
 
                                     )
                             )
-                            Spacer(Modifier.weight(1f))
                         }
-                        Spacer(modifier = Modifier.weight(1f))
                         HomePage(chordList)
                     }
                 }
@@ -80,23 +88,30 @@ fun GreetingPreview() {
     TestTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = Color(0xFF445069)
         ) {
             Column {
-                Row {
+                Row(
+                    Modifier
+                        .padding(15.dp)
+                        .fillMaxWidth()
+                        .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
+                        .padding(15.dp)
+                ) {
                     Spacer(Modifier.weight(1f))
                     Text(
                         "Générateur d'accord",
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-
-                            )
+                            textAlign = TextAlign.Center
+                        )
                     )
                     Spacer(Modifier.weight(1f))
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(Modifier.weight(1f))
                 HomePage(chordList)
+
             }
         }
 
@@ -148,7 +163,7 @@ fun ChoseOneChord(
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                modifier = Modifier.padding(8.dp)
+                colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF5B9A8B))
             ) {
                 Text("Fermer")
             }
@@ -195,9 +210,9 @@ fun GenerateChords(
                     }
                 } else if (usedChords[1] != null || usedChords[2] != null || usedChords[3] != null) {
                     for (accord in usedChords) {
-                        if(accord != null){
-                            while(!chord.getGamme().contains(accord.getNom())){
-                               chord = liste[(0..<liste.size).random()]
+                        if (accord != null) {
+                            while (!chord.getGamme().contains(accord.getNom())) {
+                                chord = liste[(0..<liste.size).random()]
                             }
                         }
                     }
@@ -275,6 +290,7 @@ fun HomePage(liste: ArrayList<Accord>) {
     }
 
 
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -303,18 +319,35 @@ fun HomePage(liste: ArrayList<Accord>) {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        Row {
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(onClick = {
-                generate.intValue++ //to regenerate the page each time the button is clicked with new chords
-            }, shape = CutCornerShape(10), modifier = Modifier.width(300.dp)) {
-                Text("Générer")
+        Column(verticalArrangement = Arrangement.Center) {
+            Row {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = {
+                    firstChord.value = null
+                    secondChord.value = null
+                    thirdChord.value = null
+                    fourthChord.value = null
+                }) {
+                    Text("Réinitialiser")
+                }
+                Spacer(modifier = Modifier.weight(1f))
             }
+            Spacer(modifier = Modifier.weight(1f))
+            Row {
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(onClick = {
+                    generate.intValue++ //to regenerate the page each time the button is clicked with new chords
+                }, shape = CutCornerShape(10), modifier = Modifier.width(300.dp)) {
+                    Text("Générer")
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+            }
             Spacer(modifier = Modifier.weight(1f))
         }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
