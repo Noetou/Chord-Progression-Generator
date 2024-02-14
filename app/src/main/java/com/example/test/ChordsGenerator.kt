@@ -36,6 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
@@ -108,7 +109,7 @@ fun GreetingPreview() {
 fun ChoseOneChord(
     liste: ArrayList<Accord>,
     onDismiss: () -> Unit,
-    onSelect: (Accord) -> Unit
+    onSelect: (Accord?) -> Unit
 ) {
     AlertDialog(
         onDismissRequest =  onDismiss,
@@ -135,6 +136,9 @@ fun ChoseOneChord(
                         )
                     }
                 }
+                item{ Text(text = "Aucun", style = TextStyle(fontWeight = FontWeight.ExtraBold),modifier= Modifier.clickable{
+                    onSelect(null)
+                })}
             }
         },
         confirmButton = {
@@ -218,9 +222,9 @@ fun HomePage(liste: ArrayList<Accord>) {
     val thirdChord = remember { mutableStateOf<Accord?>(null) }
     val fourthChord = remember { mutableStateOf<Accord?>(null) }
     val showDialog = remember { mutableStateOf(false) }
-    var nbChordsToGenerate = remember { mutableIntStateOf(4) }
+    val nbChordsToGenerate = remember { mutableIntStateOf(4) }
     val closeDialog:() -> Unit = { showDialog.value = false}
-    val selectChord:(Accord)-> Unit = { accord ->
+    val selectChord:(Accord?)-> Unit = { accord ->
         firstChord.value = accord
         showDialog.value = false
     }
@@ -240,8 +244,14 @@ fun HomePage(liste: ArrayList<Accord>) {
         //show chords list and allow the user to choose the first chord of the progression
         if (showDialog.value) {
             ChoseOneChord(liste,closeDialog,selectChord)
-            if(nbChordsToGenerate.intValue == 4 )
-            nbChordsToGenerate.intValue--;
+            if(nbChordsToGenerate.intValue == 4) {
+                nbChordsToGenerate.intValue--
+            }
+            else if(firstChord.value == null){
+                nbChordsToGenerate.intValue++
+            }
+
+
         }
 
         //if the button has already been pressed, replace the previous chords with new ones
