@@ -34,6 +34,7 @@ import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,20 +62,32 @@ class MainActivity : ComponentActivity() {
             TestTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color(0xFF445069)
                 ) {
                     Column {
-                        Row {
+                        Row(
+                            Modifier
+                                .padding(15.dp)
+                                .fillMaxWidth()
+                                .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
+                                .padding(15.dp)
+                        ) {
+                            Spacer(Modifier.weight(1f))
                             Text(
                                 "Générateur d'accord",
                                 style = TextStyle(
                                     fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
-
-                                    )
+                                    fontFamily = FontFamily.Serif,
+                                    textAlign = TextAlign.Center,
+                                    color = Color(0xFF252B48)
+                                )
                             )
+                            Spacer(Modifier.weight(1f))
                         }
+                        Spacer(Modifier.weight(1f))
                         HomePage(chordList)
+
+
                     }
                 }
 
@@ -278,7 +292,6 @@ fun HomePage(liste: ArrayList<Accord>) {
     val fourthChord = remember { mutableStateOf<Accord?>(null) }
     val dialog = remember { mutableStateOf(false) }
     val emplacement = remember { mutableIntStateOf(0) }
-    val coroutineScope = rememberCoroutineScope()
     val closeDialog: () -> Unit = { dialog.value = false }
     val openDialog: (Int) -> Unit = {
         dialog.value = true
@@ -286,14 +299,11 @@ fun HomePage(liste: ArrayList<Accord>) {
     }
 
     val selectChord: (Accord?) -> Unit = { accord ->
-        if (emplacement.intValue == 0) {
-            firstChord.value = accord
-        } else if (emplacement.intValue == 1) {
-            secondChord.value = accord
-        } else if (emplacement.intValue == 2) {
-            thirdChord.value = accord
-        } else {
-            fourthChord.value = accord
+        when (emplacement.intValue) {
+            0 -> firstChord.value = accord
+            1 -> secondChord.value = accord
+            2 -> thirdChord.value = accord
+            3 -> fourthChord.value = accord
         }
         dialog.value = false
     }
@@ -308,75 +318,78 @@ fun HomePage(liste: ArrayList<Accord>) {
         //show chords list and allow the user to choose the first chord of the progression
         if (dialog.value) {
             ChoseOneChord(liste, closeDialog, selectChord)
-        }
 
-        //if the button has already been pressed, replace the previous chords with new ones
+        } else {
 
-        Spacer(modifier = Modifier.weight(1f))
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            GenerateChords(
-                liste,
-                firstChord.value,
-                secondChord.value,
-                thirdChord.value,
-                fourthChord.value,
-                generate.value,
-                openDialog
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
 
-        Spacer(modifier = Modifier.weight(1f))
-        Column(verticalArrangement = Arrangement.Center) {
+            //if the button has already been pressed, replace the previous chords with new ones
+
             Spacer(modifier = Modifier.weight(1f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    onClick = {
-                        firstChord.value = null
-                        secondChord.value = null
-                        thirdChord.value = null
-                        fourthChord.value = null
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
-                ) {
-                    Text(
-                        "Réinitialiser",
-                        style = TextStyle(
-                            fontFamily = FontFamily.Serif,
-                            color = Color(0xFF252B48)
-                        ),
-                    )
-                }
+                GenerateChords(
+                    liste,
+                    firstChord.value,
+                    secondChord.value,
+                    thirdChord.value,
+                    fourthChord.value,
+                    generate.intValue,
+                    openDialog
+                )
                 Spacer(modifier = Modifier.weight(1f))
             }
+
             Spacer(modifier = Modifier.weight(1f))
-            Row {
-
+            Column(verticalArrangement = Arrangement.Center) {
                 Spacer(modifier = Modifier.weight(1f))
-
-                Button(
-                    onClick = {
-                        generate.intValue++ //to regenerate the page each time the button is clicked with new chords
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
-                    shape = CutCornerShape(10),
-                    modifier = Modifier.width(300.dp)
-                ) {
-                    Text(
-                        "Générer", style = TextStyle(
-                            fontFamily = FontFamily.Serif,
-                            color = Color(0xFF252B48)
+                Row {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = {
+                            firstChord.value = null
+                            secondChord.value = null
+                            thirdChord.value = null
+                            fourthChord.value = null
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
+                    ) {
+                        Text(
+                            "Réinitialiser",
+                            style = TextStyle(
+                                fontFamily = FontFamily.Serif,
+                                color = Color(0xFF252B48)
+                            ),
                         )
-                    )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Row {
 
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Button(
+                        onClick = {
+                            generate.intValue++ //to regenerate the page each time the button is clicked with new chords
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                        shape = CutCornerShape(10),
+                        modifier = Modifier.width(300.dp)
+                    ) {
+                        Text(
+                            "Générer", style = TextStyle(
+                                fontFamily = FontFamily.Serif,
+                                color = Color(0xFF252B48)
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
             Spacer(modifier = Modifier.weight(1f))
         }
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
