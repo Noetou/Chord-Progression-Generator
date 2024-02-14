@@ -2,7 +2,6 @@ package com.example.test
 
 import ChordsUtils
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -25,10 +24,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,7 +35,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
@@ -112,7 +110,7 @@ fun ChoseOneChord(
     onSelect: (Accord?) -> Unit
 ) {
     AlertDialog(
-        onDismissRequest =  onDismiss,
+        onDismissRequest = onDismiss,
         title = { Text("Choisir le premier accord") },
         text = {
             LazyHorizontalGrid(
@@ -131,19 +129,24 @@ fun ChoseOneChord(
                             text = accord.getNom(),
                             modifier = Modifier
                                 .clickable {
-                                   onSelect(accord)
+                                    onSelect(accord)
                                 }
                         )
                     }
                 }
-                item{ Text(text = "Aucun", style = TextStyle(fontWeight = FontWeight.ExtraBold),modifier= Modifier.clickable{
-                    onSelect(null)
-                })}
+                item {
+                    Text(
+                        text = "Aucun",
+                        style = TextStyle(fontWeight = FontWeight.ExtraBold),
+                        modifier = Modifier.clickable {
+                            onSelect(null)
+                        })
+                }
             }
         },
         confirmButton = {
             Button(
-                onClick =  onDismiss ,
+                onClick = onDismiss,
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Fermer")
@@ -155,37 +158,43 @@ fun ChoseOneChord(
     )
 }
 
+
 @Composable
-fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord : Accord?,secondChord : Accord?,thirdChord : Accord?,fourthChord : Accord?) {
-    val usedChords = ArrayList<Accord>()
-    if(firstChord != null){
-        usedChords.add(firstChord)
-    }
-    if(secondChord != null){
-        usedChords.add(secondChord)
-    }
-    if(thirdChord != null){
-        usedChords.add(thirdChord)
-    }
-    if(fourthChord != null){
-        usedChords.add(fourthChord)
-    }
-    else{
-        for (i in 1..nbChordsToGenerate) {
-            var chord = liste[(0..<liste.size).random()]
-            if (usedChords.size != 0) {
-                while (usedChords.contains(chord) || !usedChords[0].getGamme().contains(chord.getNom())
-                ) {
-                    val chordName =
-                        usedChords[0].getGamme()[(0..<usedChords[0].getGamme().size).random()]
-                    for (accord in liste) {
-                        if (accord.getNom() == chordName) {
-                            chord = accord
+fun GenerateChords(
+    liste: ArrayList<Accord>,
+    firstChord: Accord?,
+    secondChord: Accord?,
+    thirdChord: Accord?,
+    fourthChord: Accord?,
+    generate: Int,
+    openDialog: () -> Unit
+) {
+    val usedChords = ArrayList<Accord?>()
+    usedChords.add(firstChord)
+    usedChords.add(secondChord)
+    usedChords.add(thirdChord)
+    usedChords.add(fourthChord)
+
+    if (generate>0) {
+        for (i in 0..3) {
+            if (usedChords[i] == null) {
+                var chord = liste[(0..<liste.size).random()]
+                if (usedChords[0] != null) {
+                    while (usedChords.contains(chord) || !usedChords[0]?.getGamme()
+                            ?.contains(chord.getNom())!!
+                    ) {
+                        val chordName =
+                            usedChords[0]?.getGamme()
+                                ?.get((0..<(usedChords[0]?.getGamme()?.size!!)).random())
+                        for (accord in liste) {
+                            if (accord.getNom() == chordName) {
+                                chord = accord
+                            }
                         }
                     }
                 }
+                usedChords[i] = chord
             }
-            usedChords.add(chord)
         }
     }
 
@@ -194,20 +203,33 @@ fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord
 
         items(usedChords) {
             Column {
-                Image(
-                    painterResource(id = it.getTab()),
-                    it.getNom(),
-                    modifier = Modifier.size(150.dp)
-                )
-                Text(
-                    it.getNom(),
-                    Modifier.padding(horizontal = 65.dp),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                if (it != null) {
+                    Image(
+                        painterResource(id = it.getTab()),
+                        it.getNom(),
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clickable { openDialog() }
                     )
-                )
+
+                    Text(
+                        it.getNom(),
+                        Modifier.padding(horizontal = 65.dp),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                } else {
+                    Image(
+                        painterResource(id = R.drawable.baseline_add_24),
+                        "chord 1",
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clickable { openDialog() }
+                    )
+                }
             }
         }
     }
@@ -216,65 +238,55 @@ fun GenerateChords(liste: ArrayList<Accord>, nbChordsToGenerate: Int, firstChord
 
 @Composable
 fun HomePage(liste: ArrayList<Accord>) {
-    val etat = remember { mutableIntStateOf(0) }
+    val generate = remember { mutableIntStateOf(0) }
     val firstChord = remember { mutableStateOf<Accord?>(null) }
     val secondChord = remember { mutableStateOf<Accord?>(null) }
     val thirdChord = remember { mutableStateOf<Accord?>(null) }
     val fourthChord = remember { mutableStateOf<Accord?>(null) }
-    val showDialog = remember { mutableStateOf(false) }
-    val nbChordsToGenerate = remember { mutableIntStateOf(4) }
-    val closeDialog:() -> Unit = { showDialog.value = false}
-    val selectChord:(Accord?)-> Unit = { accord ->
+    val dialog = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val closeDialog: () -> Unit = { dialog.value = false }
+    val openDialog: () -> Unit = { dialog.value = true }
+    val selectChord: (Accord?) -> Unit = { accord ->
         firstChord.value = accord
-        showDialog.value = false
+        dialog.value = false
     }
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
-            onClick = { showDialog.value = true },
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text("Choisir le premier accord")
-            if(firstChord.value != null){
-                Text(text = "(Actuel : ${firstChord.value!!.getNom()} )")
-            }
-        }
+
 
         //show chords list and allow the user to choose the first chord of the progression
-        if (showDialog.value) {
-            ChoseOneChord(liste,closeDialog,selectChord)
-            if(nbChordsToGenerate.intValue == 4) {
-                nbChordsToGenerate.intValue--
-            }
-            else if(firstChord.value == null){
-                nbChordsToGenerate.intValue++
-            }
-
-
+        if (dialog.value) {
+            ChoseOneChord(liste, closeDialog, selectChord)
         }
 
         //if the button has already been pressed, replace the previous chords with new ones
-        if (etat.intValue > 0 && !showDialog.value) {
+
+        Spacer(modifier = Modifier.weight(1f))
+        Row {
             Spacer(modifier = Modifier.weight(1f))
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
-                GenerateChords(liste, nbChordsToGenerate.intValue,firstChord.value,secondChord.value,thirdChord.value,fourthChord.value)
-                Spacer(modifier = Modifier.weight(1f))
-            }
+            GenerateChords(
+                liste,
+                firstChord.value,
+                secondChord.value,
+                thirdChord.value,
+                fourthChord.value,
+                generate.value,
+                openDialog
+            )
+            Spacer(modifier = Modifier.weight(1f))
         }
+
         Spacer(modifier = Modifier.weight(1f))
         Row {
 
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                if (etat.intValue == 0) {
-                    etat.intValue = 1
-                }
-                else{
-                    etat.intValue++;
-                }
+                generate.intValue++ //to regenerate the page each time the button is clicked with new chords
             }, shape = CutCornerShape(10), modifier = Modifier.width(300.dp)) {
                 Text("Générer")
             }
