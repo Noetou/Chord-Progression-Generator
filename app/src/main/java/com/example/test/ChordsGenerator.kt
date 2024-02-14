@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -103,14 +104,16 @@ fun GreetingPreview() {
                         "Générateur d'accord",
                         style = TextStyle(
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
+                            fontFamily = FontFamily.Serif,
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF252B48)
                         )
                     )
                     Spacer(Modifier.weight(1f))
                 }
                 Spacer(Modifier.weight(1f))
                 HomePage(chordList)
+
 
             }
         }
@@ -143,6 +146,10 @@ fun ChoseOneChord(
                         )
                         Text(
                             text = accord.getNom(),
+                            style = TextStyle(
+                                fontFamily = FontFamily.Serif,
+                                color = Color(0xFF252B48)
+                            ),
                             modifier = Modifier
                                 .clickable {
                                     onSelect(accord)
@@ -163,7 +170,7 @@ fun ChoseOneChord(
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(contentColor = Color(0xFF5B9A8B))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
             ) {
                 Text("Fermer")
             }
@@ -242,9 +249,11 @@ fun GenerateChords(
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF252B48)
+                        ),
                     )
+
                 } else {
                     Image(
                         painterResource(id = R.drawable.baseline_add_24),
@@ -320,15 +329,25 @@ fun HomePage(liste: ArrayList<Accord>) {
 
         Spacer(modifier = Modifier.weight(1f))
         Column(verticalArrangement = Arrangement.Center) {
+            Spacer(modifier = Modifier.weight(1f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = {
-                    firstChord.value = null
-                    secondChord.value = null
-                    thirdChord.value = null
-                    fourthChord.value = null
-                }) {
-                    Text("Réinitialiser")
+                Button(
+                    onClick = {
+                        firstChord.value = null
+                        secondChord.value = null
+                        thirdChord.value = null
+                        fourthChord.value = null
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
+                ) {
+                    Text(
+                        "Réinitialiser",
+                        style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            color = Color(0xFF252B48)
+                        ),
+                    )
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -337,10 +356,20 @@ fun HomePage(liste: ArrayList<Accord>) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Button(onClick = {
-                    generate.intValue++ //to regenerate the page each time the button is clicked with new chords
-                }, shape = CutCornerShape(10), modifier = Modifier.width(300.dp)) {
-                    Text("Générer")
+                Button(
+                    onClick = {
+                        generate.intValue++ //to regenerate the page each time the button is clicked with new chords
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                    shape = CutCornerShape(10),
+                    modifier = Modifier.width(300.dp)
+                ) {
+                    Text(
+                        "Générer", style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            color = Color(0xFF252B48)
+                        )
+                    )
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
