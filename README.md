@@ -1,4 +1,4 @@
-# Chords-Generator
+# Générateur de progression d'accords
 
 ## FR 
 ## Une application android pour les musiciens 🎹🎸
@@ -14,7 +14,7 @@ Appuyez sur l'une des 4 emplacements afin de choisir un accord à y placer
 
 
 
-
+# Chords Simulater Generator
 ## EN
  An Android application for musicians 🎹🎸
 
