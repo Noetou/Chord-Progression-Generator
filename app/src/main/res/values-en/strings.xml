@@ -2,7 +2,7 @@
 <resources>
     <string name="title_activity_main">Chord Generator</string>
     <string name="app_name">Chords Generator</string>
-    <string name="title">Chords progression Generator</string>
+    <string name="title">Chords progression generator</string>
     <string name="generate">Generate</string>
     <string name="reset">Reset</string>
     <string name="none">None</string>

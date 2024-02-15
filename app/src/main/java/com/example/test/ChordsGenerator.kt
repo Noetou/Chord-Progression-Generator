@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,28 +21,22 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Spacer(Modifier.weight(1f))
                             Text(
-                                "${R.string.title}",
+                                stringResource(id = R.string.title),
                                 style = TextStyle(
                                     fontSize = 24.sp,
                                     fontFamily = FontFamily.Serif,
@@ -116,7 +108,7 @@ fun GreetingPreview() {
                 ) {
                     Spacer(Modifier.weight(1f))
                     Text(
-                        "${R.string.title}",
+                        stringResource(id = R.string.title),
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontFamily = FontFamily.Serif,
@@ -145,7 +137,7 @@ fun ChoseOneChord(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("${R.string.chose_chord}") },
+        title = { Text(stringResource(id = R.string.chose_chord)) },
         text = {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(5),
@@ -174,7 +166,7 @@ fun ChoseOneChord(
                 }
                 item {
                     Text(
-                        text = "${R.string.none}",
+                        text = stringResource(id = R.string.none),
                         style = TextStyle(fontWeight = FontWeight.ExtraBold),
                         modifier = Modifier.clickable {
                             onSelect(null)
@@ -187,7 +179,7 @@ fun ChoseOneChord(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
             ) {
-                Text("${R.string.close}")
+                Text(stringResource(id = R.string.close))
             }
         },
         modifier = Modifier
@@ -355,7 +347,7 @@ fun HomePage(liste: ArrayList<Accord>) {
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
                     ) {
                         Text(
-                            "${R.string.reset}",
+                            stringResource(id = R.string.reset),
                             style = TextStyle(
                                 fontFamily = FontFamily.Serif,
                                 color = Color(0xFF252B48)
@@ -378,7 +370,7 @@ fun HomePage(liste: ArrayList<Accord>) {
                         modifier = Modifier.width(300.dp)
                     ) {
                         Text(
-                            "${R.string.generate}", style = TextStyle(
+                            stringResource(id = R.string.generate), style = TextStyle(
                                 fontFamily = FontFamily.Serif,
                                 color = Color(0xFF252B48)
                             )
