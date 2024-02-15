@@ -1,6 +1,6 @@
 package com.example.test
 
-import ChordsUtils
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,8 +46,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
@@ -57,6 +54,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // To generate the list of chords
             val chordList = ChordsUtils.generateChordList() // get the list of all the chords
             TestTheme {
                 Surface(
@@ -64,6 +62,7 @@ class MainActivity : ComponentActivity() {
                     color = Color(0xFF445069)
                 ) {
                     Column {
+                        // Header
                         Row(
                             Modifier
                                 .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
@@ -85,6 +84,7 @@ class MainActivity : ComponentActivity() {
                         }
                         Spacer(Modifier.weight(1f))
 
+                        // Display the starting page
                         HomePage(chordList)
                         Spacer(Modifier.weight(1f))
 
@@ -97,53 +97,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    val chordList = ChordsUtils.generateChordList() // get the list of all the chords
-    TestTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color(0xFF445069)
-        ) {
-            Column {
-                Row(
-                    Modifier
-                        .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
-                        .fillMaxWidth()
-                        .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
-                        .padding(15.dp)
-                ) {
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        stringResource(id = R.string.title),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontFamily = FontFamily.Serif,
-                            textAlign = TextAlign.Center,
-                            color = Color(0xFF252B48)
-                        )
-                    )
-                    Spacer(Modifier.weight(1f))
-                }
-                Spacer(Modifier.weight(1f))
-                HomePage(chordList)
-                Spacer(Modifier.weight(1f))
 
-            }
-        }
-
-    }
-}
-
+/*
+* Display a pop-up to chose a chord between every chords in the list
+*  */
 
 @Composable
 fun ChoseOneChord(
-    liste: ArrayList<Accord>,
+    list: ArrayList<Chord>,
     onDismiss: () -> Unit,
-    onSelect: (Accord?) -> Unit,
+    onSelect: (Chord?) -> Unit,
 ) {
     BoxWithConstraints {
+        //Determine the number of columns in the grid based on the device's width
         val col = when {
             maxWidth.value <= 400 -> 2
             maxWidth.value <= 450 -> 3
@@ -151,65 +117,89 @@ fun ChoseOneChord(
             else -> 5
         }
 
-
+        // Search functionality
         var searchQuery by remember { mutableStateOf("") }
+
+        // Display the pop-up
 
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(stringResource(id = R.string.chose_chord)) },
             text = {
-                Column{
-                TextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    placeholder = { Text(
-                        stringResource(id = R.string.search) + "\uD83D\uDD0D") },
-                    modifier = Modifier.padding(20.dp).fillMaxWidth()
-                )
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(col),
-                ) {
-                    val filteredList = mutableListOf<Accord>()
-
-                    for (accord in liste) {
-                        if (accord.getNom().contains(searchQuery, ignoreCase = true)) {
-                            filteredList.add(accord)
-                        }
-                    }
-                    items(filteredList) { accord ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(horizontal = 10.dp)
-                        ) {
-                            Image(
-                                painterResource(id = accord.getTab()),
-                                contentDescription = accord.getNom(),
-
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .clickable {
-                                        onSelect(accord)
-                                    }
-                            )
+                Column {
+                    // Search field
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        placeholder = {
                             Text(
-                                text = accord.getNom(),
-                                style = TextStyle(
-                                    fontFamily = FontFamily.Serif,
-                                    color = Color(0xFF252B48)
-                                )
+                                stringResource(id = R.string.search) + "\uD83D\uDD0D"
                             )
+                        },
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .fillMaxWidth()
+                    )
+
+                    // To display the chords
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(col),
+                    ) {
+
+                        // Filter the list with the text of the search field
+                        val filteredList = mutableListOf<Chord>()
+
+                        for (accord in list) {
+                            if (accord.getName().contains(searchQuery, ignoreCase = true)) {
+                                filteredList.add(accord)
+                            }
+                        }
+
+                        // Display the filtered list of chords
+
+                        items(filteredList) { accord ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            ) {
+                                Image(
+                                    painterResource(id = accord.getTab()),
+                                    contentDescription = accord.getName(),
+
+                                    modifier = Modifier
+                                        .size(80.dp)
+                                        .clickable {
+                                            onSelect(accord)
+                                        }
+                                )
+                                Text(
+                                    text = accord.getName(),
+                                    style = TextStyle(
+                                        fontFamily = FontFamily.Serif,
+                                        color = Color(0xFF252B48)
+                                    )
+                                )
+                            }
+                        }
+
+                        // Add of a "None" option, to allow the user to delete a previous choice
+
+                        item {
+                            Text(
+                                text = stringResource(id = R.string.none),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 18.sp,
+                                    textAlign = TextAlign.Center
+                                ),
+                                modifier = Modifier.clickable {
+                                    onSelect(null)
+                                })
                         }
                     }
-                    item {
-                        Text(
-                            text = stringResource(id = R.string.none),
-                            style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 18.sp, textAlign = TextAlign.Center),
-                            modifier = Modifier.clickable {
-                                onSelect(null)
-                            })
-                    }
-                }}
+                }
             },
+            // Closing button
             confirmButton = {
                 Button(
                     onClick = onDismiss,
@@ -229,56 +219,83 @@ fun ChoseOneChord(
 }
 
 
+/*
+* This method does 2 things :
+* 1. It ensures that all four chords aren't null, if a chord is null :
+*   - If the first chord is set : it chooses a chord among the first chord's scale
+*   - If another chord is set but not the first : it chooses a first chord which has all the set chords in its scale
+*   - If none of the 4 chords are set  : chooses randomly the first chord among the list
+*
+* 2. It displays a grid containing different things depending on on "generate"'s state :
+*
+*   - If "generate"==0 : it displays the 4 "+" images
+*   - If "generate" > 0 : it displays the chord progression instead
+*  */
 @Composable
 fun GenerateChords(
-    liste: ArrayList<Accord>,
-    firstChord: Accord?,
-    secondChord: Accord?,
-    thirdChord: Accord?,
-    fourthChord: Accord?,
+    list: ArrayList<Chord>,
+    firstChord: Chord?,
+    secondChord: Chord?,
+    thirdChord: Chord?,
+    fourthChord: Chord?,
     generate: Int,
     openDialog: (Int) -> Unit
 ) {
-    val usedChords = ArrayList<Accord?>()
+
+    // Add all four chords to a list, if a chord hasn't been set by the user beforehand, the chord is null
+    val usedChords = ArrayList<Chord?>()
     usedChords.add(firstChord)
     usedChords.add(secondChord)
     usedChords.add(thirdChord)
     usedChords.add(fourthChord)
 
+
+    // The logic if a chord is null
+
+    // "if (generate > 0)" ensure the method doesn't display chords on the starting page
+
+
     if (generate > 0) {
         for (i in 0..3) {
             if (usedChords[i] == null) {
-                var chord = liste[(0..<liste.size).random()]
+                var chord = list[(0..<list.size).random()]
                 if (usedChords[0] != null) {
-                    while (usedChords.contains(chord) || !usedChords[0]?.getGamme()
-                            ?.contains(chord.getNom())!!
+
+                    /* Ensure that the same chord can't be present twice in the same progression if not chosen by the user,
+                    *  and that the chosen chord is in the scale of the firstChord */
+
+                    while (usedChords.contains(chord) || !usedChords[0]?.getScale()
+                            ?.contains(chord.getName())!!
                     ) {
                         val chordName =
-                            usedChords[0]?.getGamme()
-                                ?.get((0..<(usedChords[0]?.getGamme()?.size!!)).random())
-                        for (accord in liste) {
-                            if (accord.getNom() == chordName) {
-                                chord = accord
-                            }
-                        }
-                    }
-                } else if (usedChords[1] != null || usedChords[2] != null || usedChords[3] != null) {
-                    for (accord in usedChords) {
-                        if (accord != null) {
-                            while (!chord.getGamme().contains(accord.getNom())) {
-                                chord = liste[(0..<liste.size).random()]
+                            usedChords[0]?.getScale()
+                                ?.get((0..<(usedChords[0]?.getScale()?.size!!)).random())
+                        for (c in list) {
+                            if (c.getName() == chordName) {
+                                chord = c
                             }
                         }
                     }
                 }
-                usedChords[i] = chord
+                // Ensure that the first chord has the chosen chords in its scale
+                else if (usedChords[1] != null || usedChords[2] != null || usedChords[3] != null) {
+                    for (c in usedChords) {
+                        if (c != null) {
+                            while (!chord.getScale().contains(c.getName())) {
+                                chord = list[(0..<list.size).random()]
+                            }
+                        }
+                    }
+                }
+                usedChords[i] = chord //replace null value by the chord
             }
         }
     }
 
+    // Display the grid based on "generate"'s value
     BoxWithConstraints {
-        val availableHeight = maxHeight
-        val availableWidth = maxWidth
+        val availableHeight = maxHeight // adapt the height of "+" symbols depending on the screen's size
+        val availableWidth = maxWidth // adapt the width "+" symbols depending on the screen's size
         LazyHorizontalGrid(
             rows = GridCells.Fixed(2),
             modifier = Modifier.height(availableHeight - 200.dp)
@@ -289,14 +306,14 @@ fun GenerateChords(
                     if (chord != null) {
                         Image(
                             painterResource(id = chord.getTab()),
-                            chord.getNom(),
+                            chord.getName(),
                             modifier = Modifier
                                 .size(150.dp)
                                 .clickable { openDialog(index) }
                         )
 
                         Text(
-                            chord.getNom(),
+                            chord.getName(),
                             Modifier.padding(horizontal = 65.dp),
                             style = TextStyle(
                                 fontSize = 20.sp,
@@ -312,7 +329,7 @@ fun GenerateChords(
                             "chord 1",
                             modifier = Modifier
                                 .height((availableHeight - 200.dp) / 4)
-                                .width((availableWidth - 200.dp) /4)
+                                .width((availableWidth - 200.dp) / 4)
                                 .clickable { openDialog(index) }
                         )
                     }
@@ -320,32 +337,33 @@ fun GenerateChords(
             }
         }
     }
-// create components : 2 row of 2 chords with their tabs
 
 }
 
-// create the page each time the activity is refreshed
+// Recreate the page each time the activity is refreshed
 @Composable
-fun HomePage(liste: ArrayList<Accord>) {
-    val generate = remember { mutableIntStateOf(0) }
-    val firstChord = remember { mutableStateOf<Accord?>(null) }
-    val secondChord = remember { mutableStateOf<Accord?>(null) }
-    val thirdChord = remember { mutableStateOf<Accord?>(null) }
-    val fourthChord = remember { mutableStateOf<Accord?>(null) }
-    val dialog = remember { mutableStateOf(false) }
-    val emplacement = remember { mutableIntStateOf(0) }
+fun HomePage(list: ArrayList<Chord>) {
+    val generate = remember { mutableIntStateOf(0) } // handles the reset of the application
+    val firstChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the first chord
+    val secondChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the second chord
+    val thirdChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the third chord
+    val fourthChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the fourth chord
+    val dialog = remember { mutableStateOf(false) } // remembers whether the AlertDialog is shown or not
+    val slot = remember { mutableIntStateOf(0) } // remembers the chosen slot when the user chose a chord
+
     val closeDialog: () -> Unit = { dialog.value = false }
     val openDialog: (Int) -> Unit = {
         dialog.value = true
-        emplacement.intValue = it
+        slot.intValue = it
     }
 
-    val selectChord: (Accord?) -> Unit = { accord ->
-        when (emplacement.intValue) {
-            0 -> firstChord.value = accord
-            1 -> secondChord.value = accord
-            2 -> thirdChord.value = accord
-            3 -> fourthChord.value = accord
+    // when a chord is selected, put its value into the right chord depending on the chosen slot
+    val selectChord: (Chord?) -> Unit = { chord ->
+        when (slot.intValue) {
+            0 -> firstChord.value = chord
+            1 -> secondChord.value = chord
+            2 -> thirdChord.value = chord
+            3 -> fourthChord.value = chord
         }
         dialog.value = false
     }
@@ -357,20 +375,17 @@ fun HomePage(liste: ArrayList<Accord>) {
     ) {
 
 
-        //show chords list and allow the user to choose the first chord of the progression
+        // Show chords list and allow the user to choose the first chord of the progression
         if (dialog.value) {
-            ChoseOneChord(liste, closeDialog, selectChord)
+            ChoseOneChord(list, closeDialog, selectChord)
 
         } else {
-
-
-            //if the button has already been pressed, replace the previous chords with new ones
 
             Spacer(modifier = Modifier.weight(1f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
                 GenerateChords(
-                    liste,
+                    list,
                     firstChord.value,
                     secondChord.value,
                     thirdChord.value,
@@ -382,17 +397,19 @@ fun HomePage(liste: ArrayList<Accord>) {
             }
 
             BoxWithConstraints {
-                val availableWidth = maxWidth
                 Column(verticalArrangement = Arrangement.Center) {
                     Spacer(modifier = Modifier.weight(1f))
                     Row {
                         Spacer(modifier = Modifier.weight(1f))
+
+                        // "Reset" button
                         Button(
                             onClick = {
                                 firstChord.value = null
                                 secondChord.value = null
                                 thirdChord.value = null
                                 fourthChord.value = null
+                                generate.intValue = 0
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
                         ) {
@@ -404,15 +421,19 @@ fun HomePage(liste: ArrayList<Accord>) {
                                 ),
                             )
                         }
+
+
                         Spacer(modifier = Modifier.weight(1f))
                     }
                     Row {
 
                         Spacer(modifier = Modifier.weight(1f))
 
+                        // "Generate" button
                         Button(
                             onClick = {
-                                generate.intValue++ //to regenerate the page each time the button is clicked with new chords
+                                generate.intValue++ /*to regenerate the page each time the button is
+                                                      clicked with new chords, without generating the "+" images */
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
                             shape = CutCornerShape(10),
