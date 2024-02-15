@@ -1,6 +1,6 @@
-# Chord Progression Generator
+# Practice your skills !
 
-## An Android application for musicians 🎹🎸
+## An Android application for guitarists 🎸 from beginners to advanced players
 
 Press the *Generate* button to create a progression of 4 chords along with their tablature.
 
