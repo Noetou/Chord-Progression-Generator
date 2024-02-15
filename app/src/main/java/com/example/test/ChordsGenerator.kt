@@ -8,17 +8,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CutCornerShape
@@ -28,10 +31,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         Row(
                             Modifier
-                                .padding(15.dp)
+                                .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
                                 .fillMaxWidth()
                                 .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                                 .padding(15.dp)
@@ -77,8 +83,9 @@ class MainActivity : ComponentActivity() {
                             Spacer(Modifier.weight(1f))
                         }
                         Spacer(Modifier.weight(1f))
-                        Spacer(Modifier.weight(1f))
+
                         HomePage(chordList)
+                        Spacer(Modifier.weight(1f))
 
 
                     }
@@ -101,7 +108,7 @@ fun GreetingPreview() {
             Column {
                 Row(
                     Modifier
-                        .padding(15.dp)
+                        .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
                         .fillMaxWidth()
                         .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                         .padding(15.dp)
@@ -120,7 +127,7 @@ fun GreetingPreview() {
                 }
                 Spacer(Modifier.weight(1f))
                 HomePage(chordList)
-
+                Spacer(Modifier.weight(1f))
 
             }
         }
@@ -135,57 +142,88 @@ fun ChoseOneChord(
     onDismiss: () -> Unit,
     onSelect: (Accord?) -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(id = R.string.chose_chord)) },
-        text = {
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(5),
-            ) {
-                items(liste) { accord ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    ) {
-                        Image(
-                            painterResource(id = accord.getTab()),
-                            contentDescription = accord.getNom()
-                        )
-                        Text(
-                            text = accord.getNom(),
-                            style = TextStyle(
-                                fontFamily = FontFamily.Serif,
-                                color = Color(0xFF252B48)
-                            ),
-                            modifier = Modifier
-                                .clickable {
-                                    onSelect(accord)
-                                }
-                        )
+    BoxWithConstraints {
+        val col = when {
+            maxWidth.value <= 400 -> 2
+            maxWidth.value <= 450 -> 3
+            maxWidth.value <= 700 -> 4
+            else -> 5
+        }
+
+
+        var searchQuery by remember { mutableStateOf("") }
+
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(stringResource(id = R.string.chose_chord)) },
+            text = {
+                Column{
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Recherche") },
+                    modifier = Modifier.padding(20.dp).fillMaxWidth()
+                )
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(col),
+                ) {
+                    val filteredList = mutableListOf<Accord>()
+
+                    for (accord in liste) {
+                        if (accord.getNom().contains(searchQuery, ignoreCase = true)) {
+                            filteredList.add(accord)
+                        }
                     }
+                    items(filteredList) { accord ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        ) {
+                            Image(
+                                painterResource(id = accord.getTab()),
+                                contentDescription = accord.getNom(),
+
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clickable {
+                                        onSelect(accord)
+                                    }
+                            )
+                            Text(
+                                text = accord.getNom(),
+                                style = TextStyle(
+                                    fontFamily = FontFamily.Serif,
+                                    color = Color(0xFF252B48)
+                                )
+                            )
+                        }
+                    }
+                    item {
+                        Text(
+                            text = stringResource(id = R.string.none),
+                            style = TextStyle(fontWeight = FontWeight.ExtraBold),
+                            modifier = Modifier.clickable {
+                                onSelect(null)
+                            })
+                    }
+                }}
+            },
+            confirmButton = {
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+
+
+                    ) {
+                    Text(stringResource(id = R.string.close))
                 }
-                item {
-                    Text(
-                        text = stringResource(id = R.string.none),
-                        style = TextStyle(fontWeight = FontWeight.ExtraBold),
-                        modifier = Modifier.clickable {
-                            onSelect(null)
-                        })
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
-            ) {
-                Text(stringResource(id = R.string.close))
-            }
-        },
-        modifier = Modifier
-            .width(350.dp)
-            .height(600.dp)
-    )
+            },
+            modifier = Modifier
+                .width(maxWidth)
+                .height(maxHeight)
+        )
+    }
+
 }
 
 
@@ -236,43 +274,51 @@ fun GenerateChords(
         }
     }
 
-// create components : 2 row of 2 chords with their tabs
-    LazyHorizontalGrid(rows = GridCells.Fixed(2), modifier = Modifier.height(400.dp)) {
+    BoxWithConstraints {
+        val availableHeight = maxHeight
 
-        itemsIndexed(usedChords) { index, chord ->
-            Column {
-                if (chord != null) {
-                    Image(
-                        painterResource(id = chord.getTab()),
-                        chord.getNom(),
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clickable { openDialog(index) }
-                    )
+        LazyHorizontalGrid(
+            rows = GridCells.Fixed(2),
+            modifier = Modifier.height(availableHeight - 200.dp)
+        ) {
 
-                    Text(
-                        chord.getNom(),
-                        Modifier.padding(horizontal = 65.dp),
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = Color(0xFF252B48)
-                        ),
-                    )
+            itemsIndexed(usedChords) { index, chord ->
+                Column {
+                    if (chord != null) {
+                        Image(
+                            painterResource(id = chord.getTab()),
+                            chord.getNom(),
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clickable { openDialog(index) }
+                        )
 
-                } else {
-                    Image(
-                        painterResource(id = R.drawable.baseline_add_24),
-                        "chord 1",
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clickable { openDialog(index) }
-                    )
+                        Text(
+                            chord.getNom(),
+                            Modifier.padding(horizontal = 65.dp),
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                color = Color(0xFF252B48)
+                            ),
+                        )
+
+                    } else {
+                        Image(
+                            painterResource(id = R.drawable.plus),
+                            "chord 1",
+                            modifier = Modifier
+                                .size((availableHeight - 200.dp) / 4)
+                                .clickable { openDialog(index) }
+                        )
+                    }
                 }
             }
         }
     }
+// create components : 2 row of 2 chords with their tabs
+
 }
 
 // create the page each time the activity is refreshed
@@ -332,56 +378,60 @@ fun HomePage(liste: ArrayList<Accord>) {
                 Spacer(modifier = Modifier.weight(1f))
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-            Column(verticalArrangement = Arrangement.Center) {
-                Spacer(modifier = Modifier.weight(1f))
-                Row {
+            BoxWithConstraints {
+                val availableWidth = maxWidth
+                Column(verticalArrangement = Arrangement.Center) {
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = {
-                            firstChord.value = null
-                            secondChord.value = null
-                            thirdChord.value = null
-                            fourthChord.value = null
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
-                    ) {
-                        Text(
-                            stringResource(id = R.string.reset),
-                            style = TextStyle(
-                                fontFamily = FontFamily.Serif,
-                                color = Color(0xFF252B48)
-                            ),
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Row {
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Button(
-                        onClick = {
-                            generate.intValue++ //to regenerate the page each time the button is clicked with new chords
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
-                        shape = CutCornerShape(10),
-                        modifier = Modifier.width(300.dp)
-                    ) {
-                        Text(
-                            stringResource(id = R.string.generate), style = TextStyle(
-                                fontFamily = FontFamily.Serif,
-                                color = Color(0xFF252B48)
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = {
+                                firstChord.value = null
+                                secondChord.value = null
+                                thirdChord.value = null
+                                fourthChord.value = null
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))
+                        ) {
+                            Text(
+                                stringResource(id = R.string.reset),
+                                style = TextStyle(
+                                    fontFamily = FontFamily.Serif,
+                                    color = Color(0xFF252B48)
+                                ),
                             )
-                        )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                    Row {
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Button(
+                            onClick = {
+                                generate.intValue++ //to regenerate the page each time the button is clicked with new chords
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                            shape = CutCornerShape(10),
+                            modifier = Modifier
+                                .padding(30.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                stringResource(id = R.string.generate), style = TextStyle(
+                                    fontFamily = FontFamily.Serif,
+                                    color = Color(0xFF252B48)
+                                )
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
                 }
-                Spacer(modifier = Modifier.weight(1f))
             }
-            Spacer(modifier = Modifier.weight(1f))
+
+
         }
     }
 }
