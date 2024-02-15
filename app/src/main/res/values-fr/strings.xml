@@ -8,4 +8,5 @@
     <string name="none">Aucun</string>
     <string name="chose_chord">Choisir un accord</string>
     <string name="close">Fermer</string>
+    <string name="search">Rechercher</string>
 </resources>

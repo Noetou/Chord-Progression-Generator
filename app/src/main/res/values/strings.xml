@@ -7,5 +7,6 @@
     <string name="none">None</string>
     <string name="chose_chord">Choose a chord</string>
     <string name="close">Close</string>
+    <string name="search">Search</string>
 
 </resources>

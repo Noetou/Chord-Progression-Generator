@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
@@ -161,7 +162,8 @@ fun ChoseOneChord(
                 TextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Recherche") },
+                    placeholder = { Text(
+                        stringResource(id = R.string.search) + "\uD83D\uDD0D") },
                     modifier = Modifier.padding(20.dp).fillMaxWidth()
                 )
                 LazyVerticalGrid(
@@ -201,7 +203,7 @@ fun ChoseOneChord(
                     item {
                         Text(
                             text = stringResource(id = R.string.none),
-                            style = TextStyle(fontWeight = FontWeight.ExtraBold),
+                            style = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 18.sp, textAlign = TextAlign.Center),
                             modifier = Modifier.clickable {
                                 onSelect(null)
                             })
@@ -276,7 +278,7 @@ fun GenerateChords(
 
     BoxWithConstraints {
         val availableHeight = maxHeight
-
+        val availableWidth = maxWidth
         LazyHorizontalGrid(
             rows = GridCells.Fixed(2),
             modifier = Modifier.height(availableHeight - 200.dp)
@@ -309,7 +311,8 @@ fun GenerateChords(
                             painterResource(id = R.drawable.plus),
                             "chord 1",
                             modifier = Modifier
-                                .size((availableHeight - 200.dp) / 4)
+                                .height((availableHeight - 200.dp) / 4)
+                                .width((availableWidth - 200.dp) /4)
                                 .clickable { openDialog(index) }
                         )
                     }
