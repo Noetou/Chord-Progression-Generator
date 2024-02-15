@@ -25,7 +25,7 @@ Tap on one of the 4 slots to choose a chord to place there.
 
 
 
-### If you want to remove a previously placed chord? ###
+### Want to remove a previously placed chord? ###
 
 ![None chord choice](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/5d8a5230-4be2-4eb9-a4b0-72f4b9b474e1)
 
