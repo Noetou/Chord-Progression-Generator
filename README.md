@@ -1,28 +1,38 @@
-# Générateur de progression d'accords
+# Chord Progression Generator
 
-## FR 
-## Une application android pour les musiciens 🎹🎸
+## An Android application for musicians 🎹🎸
 
-Appuyez sur le bouton "Générer" afin de générer une progression de 4 accords accompagnés de leur tablature.
-Appuyez à nouveau le bouton afin de générer une nouvelle suite d'accord ! 
+Press the *Generate* button to create a progression of 4 chords along with their tablature.
 
-### Des possibilités infinies 
+Press the button again to generate a new sequence of chords!
 
-Appuyez sur l'une des 4 emplacements afin de choisir un accord à y placer
-
-**⚠️ Le premier accord (en haut à gauche) défini la gamme de la progression ⚠️**
+![Starting page](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/d9920997-1a6c-4faa-ba88-e03d9169715e)
 
 
+### Endless possibilities 
 
-# Chords Simulater Generator
-## EN
- An Android application for musicians 🎹🎸
+Tap on one of the 4 slots to choose a chord to place there.
 
-Press the "Generate" button to generate a progression of 4 chords accompanied by their tablature.
-Press the button again to generate a new chord progression! 
+![Chord slots](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/fd5fe8e4-eaaf-4a5a-b137-285b207e8aaa)
 
-### Infinite possibilities 
 
-Press one of the 4 slots to choose a chord to place there
 
-**⚠️ The first chord (top left) defines the scale of the progression  ⚠️**
+#### N.B. : **⚠️ The first chord (top left) defines the progression's chords possibilities ⚠️** ####
+
+ **Use the search bar to find your chord quickly!** 
+ 
+![Chord choice and searchbar](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/4a64f0f3-12dd-4b0c-9602-f8c1f99d52f0)
+
+
+
+### If you want to remove a previously placed chord? ###
+
+![None chord choice](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/5d8a5230-4be2-4eb9-a4b0-72f4b9b474e1)
+
+Choose "None" when selecting the chord, and let the app generate a new one randomly!
+
+Press the *Reset* button to clear all selected chords and start from scratch!
+
+![reset button](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/876315fd-bf99-4493-8a83-f17317cce004)
+
+
