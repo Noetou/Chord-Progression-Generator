@@ -47,6 +47,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.test.ui.theme.TestTheme
@@ -323,7 +324,8 @@ fun DisplayChords(
                             painterResource(id = chord.getTab()),
                             chord.getName(),
                             modifier = Modifier
-                                .size(150.dp)
+                                .height((availableHeight - 100.dp) / 4)
+                                .width((availableWidth - 100.dp) / 4)
                                 .clickable { openDialog(index) }
                         )
 
@@ -338,9 +340,13 @@ fun DisplayChords(
                                 color = Color(0xFF252B48)
                             ),
                         )
-                        if(chord.getMediaPlayer() != null){
+                        if (chord.getMediaPlayer() != null) {
                             Button(onClick = { soundButtonOnClick(chord) },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(
+                                        0xFF5B9A8B
+                                    )
+                                ),
                                 content = {
                                     Icon(
                                         painterResource(id = R.drawable.volume_up),
@@ -348,7 +354,6 @@ fun DisplayChords(
                                     )
                                 })
                         }
-
 
 
                     } else {

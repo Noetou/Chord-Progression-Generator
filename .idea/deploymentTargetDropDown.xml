@@ -13,6 +13,15 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Noé\.android\avd\Medium_Phone.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
                   <value value="C:\Users\Noé\.android\avd\Pixel_7_Pro_API_31.avd" />
                 </Key>
               </deviceKey>
