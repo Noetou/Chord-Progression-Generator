@@ -1,9 +1,13 @@
 package com.example.test
 
+import android.media.MediaPlayer
+import android.provider.MediaStore.Audio.Media
+
 class Chord(
     private val name: String,
     private val tab: Int,
     private var scale: ArrayList<String>,
+    private val sound: MediaPlayer?
 ) {
 
     /*
@@ -28,6 +32,8 @@ class Chord(
         return scale
     }
 
- 
+    fun getMediaPlayer(): MediaPlayer? {
+        return sound
+    }
 
 }

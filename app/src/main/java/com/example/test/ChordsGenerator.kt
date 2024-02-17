@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -218,30 +219,19 @@ fun ChoseOneChord(
 
 }
 
-
-/*
-* This method does 2 things :
-* 1. It ensures that all four chords aren't null, if a chord is null :
+/* It ensures that all four chords aren't null, if a chord is null :
 *   - If the first chord is set : it chooses a chord among the first chord's scale
 *   - If another chord is set but not the first : it chooses a first chord which has all the set chords in its scale
 *   - If none of the 4 chords are set  : chooses randomly the first chord among the list
-*
-* 2. It displays a grid containing different things depending on on "generate"'s state :
-*
-*   - If "generate"==0 : it displays the 4 "+" images
-*   - If "generate" > 0 : it displays the chord progression instead
-*  */
-@Composable
-fun GenerateChords(
+ */
+fun generateChords(
     list: ArrayList<Chord>,
     firstChord: Chord?,
     secondChord: Chord?,
     thirdChord: Chord?,
     fourthChord: Chord?,
     generate: Int,
-    openDialog: (Int) -> Unit
-) {
-
+): ArrayList<Chord?> {
     // Add all four chords to a list, if a chord hasn't been set by the user beforehand, the chord is null
     val usedChords = ArrayList<Chord?>()
     usedChords.add(firstChord)
@@ -249,11 +239,9 @@ fun GenerateChords(
     usedChords.add(thirdChord)
     usedChords.add(fourthChord)
 
-
     // The logic if a chord is null
 
     // "if (generate > 0)" ensure the method doesn't display chords on the starting page
-
 
     if (generate > 0) {
         for (i in 0..3) {
@@ -292,9 +280,36 @@ fun GenerateChords(
         }
     }
 
+    return usedChords
+}
+
+/*
+*  It displays a grid containing different things depending on on "generate"'s state :
+*
+*   - If "generate"==0 : it displays the 4 "+" images
+*   - If "generate" > 0 : it displays the chord progression instead
+*  */
+@Composable
+fun DisplayChords(
+    list: ArrayList<Chord>,
+    firstChord: Chord?,
+    secondChord: Chord?,
+    thirdChord: Chord?,
+    fourthChord: Chord?,
+    generate: Int,
+    openDialog: (Int) -> Unit,
+    soundButtonOnClick: (Chord) -> Unit
+) {
+
+
+    val usedChords =
+        generateChords(list, firstChord, secondChord, thirdChord, fourthChord, generate)
+
+
     // Display the grid based on "generate"'s value
     BoxWithConstraints {
-        val availableHeight = maxHeight // adapt the height of "+" symbols depending on the screen's size
+        val availableHeight =
+            maxHeight // adapt the height of "+" symbols depending on the screen's size
         val availableWidth = maxWidth // adapt the width "+" symbols depending on the screen's size
         LazyHorizontalGrid(
             rows = GridCells.Fixed(2),
@@ -302,7 +317,7 @@ fun GenerateChords(
         ) {
 
             itemsIndexed(usedChords) { index, chord ->
-                Column {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     if (chord != null) {
                         Image(
                             painterResource(id = chord.getTab()),
@@ -311,6 +326,7 @@ fun GenerateChords(
                                 .size(150.dp)
                                 .clickable { openDialog(index) }
                         )
+
 
                         Text(
                             chord.getName(),
@@ -322,6 +338,15 @@ fun GenerateChords(
                                 color = Color(0xFF252B48)
                             ),
                         )
+                        Button(onClick = { soundButtonOnClick(chord) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                                    content = {
+                            Icon(
+                                painterResource(id = R.drawable.volume_up),
+                                contentDescription = chord.getName()
+                            )
+                        })
+
 
                     } else {
                         Image(
@@ -344,12 +369,18 @@ fun GenerateChords(
 @Composable
 fun HomePage(list: ArrayList<Chord>) {
     val generate = remember { mutableIntStateOf(0) } // handles the reset of the application
-    val firstChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the first chord
-    val secondChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the second chord
-    val thirdChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the third chord
-    val fourthChord = remember { mutableStateOf<Chord?>(null) } // remembers the value of the fourth chord
-    val dialog = remember { mutableStateOf(false) } // remembers whether the AlertDialog is shown or not
-    val slot = remember { mutableIntStateOf(0) } // remembers the chosen slot when the user chose a chord
+    val firstChord =
+        remember { mutableStateOf<Chord?>(null) } // remembers the value of the first chord
+    val secondChord =
+        remember { mutableStateOf<Chord?>(null) } // remembers the value of the second chord
+    val thirdChord =
+        remember { mutableStateOf<Chord?>(null) } // remembers the value of the third chord
+    val fourthChord =
+        remember { mutableStateOf<Chord?>(null) } // remembers the value of the fourth chord
+    val dialog =
+        remember { mutableStateOf(false) } // remembers whether the AlertDialog is shown or not
+    val slot =
+        remember { mutableIntStateOf(0) } // remembers the chosen slot when the user chose a chord
 
     val closeDialog: () -> Unit = { dialog.value = false }
     val openDialog: (Int) -> Unit = {
@@ -369,7 +400,6 @@ fun HomePage(list: ArrayList<Chord>) {
     }
 
 
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -384,14 +414,26 @@ fun HomePage(list: ArrayList<Chord>) {
             Spacer(modifier = Modifier.weight(1f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
-                GenerateChords(
+                DisplayChords(
                     list,
                     firstChord.value,
                     secondChord.value,
                     thirdChord.value,
                     fourthChord.value,
                     generate.intValue,
-                    openDialog
+                    openDialog,
+                    fun(chord: Chord) {
+
+                        if (chord.getMediaPlayer() != null) {
+                            if (chord.getMediaPlayer()!!.isPlaying) {
+                                chord.getMediaPlayer()!!.pause()
+                                chord.getMediaPlayer()!!.seekTo(0)
+                            } else {
+                                chord.getMediaPlayer()!!.start()
+                            }
+                        }
+
+                    }
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
