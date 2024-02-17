@@ -338,14 +338,17 @@ fun DisplayChords(
                                 color = Color(0xFF252B48)
                             ),
                         )
-                        Button(onClick = { soundButtonOnClick(chord) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
-                                    content = {
-                            Icon(
-                                painterResource(id = R.drawable.volume_up),
-                                contentDescription = chord.getName()
-                            )
-                        })
+                        if(chord.getMediaPlayer() != null){
+                            Button(onClick = { soundButtonOnClick(chord) },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
+                                content = {
+                                    Icon(
+                                        painterResource(id = R.drawable.volume_up),
+                                        contentDescription = chord.getName()
+                                    )
+                                })
+                        }
+
 
 
                     } else {
