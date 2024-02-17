@@ -6,7 +6,7 @@ Press the *Generate* button to create a progression of 4 chords along with their
 
 Press the button again to generate a new sequence of chords!
 
-![Starting page](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/d9920997-1a6c-4faa-ba88-e03d9169715e)
+![image](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/58b3de44-9001-404f-8555-84d49632c800)
 
 
 ### Endless possibilities 
@@ -34,5 +34,11 @@ Choose "None" when selecting the chord, and let the app generate a new one rando
 Press the *Reset* button to clear all selected chords and start from scratch!
 
 ![reset button](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/876315fd-bf99-4493-8a83-f17317cce004)
+
+
+### Listen to the chords ! ###
+
+Press the ![volume button](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/1d112dcd-078b-4eed-a54b-503fe72adf8a) button to listen to the chords !
+
 
 
