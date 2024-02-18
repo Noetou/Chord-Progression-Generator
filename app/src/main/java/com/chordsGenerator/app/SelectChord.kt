@@ -35,12 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-
 /*
 * Display a pop-up to chose a chord between every chords in the list
 *  */
-
-
 @Composable
 fun ChoseOneChord(
     list: ArrayList<Chord>,

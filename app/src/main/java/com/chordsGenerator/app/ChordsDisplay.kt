@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -28,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-
 /*
 *  It displays a grid containing different things depending on on "generate"'s state :
 *
@@ -46,10 +44,8 @@ fun Display(
     soundButtonOnClick: (Chord) -> Unit
 ) {
 
-
     val usedChords =
         generateChords(list, chordsStateList, generate)
-
 
     // Display the grid based on "generate"'s value
     BoxWithConstraints {
@@ -110,10 +106,10 @@ fun Display(
                 } else {
                     Image(
                         painterResource(id = R.drawable.plus),
-                        "chord ${index +1}",
+                        "chord ${index + 1}",
                         modifier = Modifier
-                            .height((availableHeight -200.dp) / 2)
-                            .width((availableWidth - 200.dp)  / 2)
+                            .height((availableHeight - 200.dp) / 2)
+                            .width((availableWidth - 200.dp) / 2)
                             .clickable { openDialog(index) }
                     )
                 }

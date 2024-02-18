@@ -1,10 +1,8 @@
 package com.chordsGenerator.app
 
 import AudioPlayerForMediaPlayer
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -66,8 +64,6 @@ fun HomePage(list: ArrayList<Chord>) {
 
         } else {
             Spacer(modifier = Modifier.weight(1f))
-
-
             Display(
                 list,
                 chordsStateList,
@@ -79,7 +75,6 @@ fun HomePage(list: ArrayList<Chord>) {
 
                 }
             )
-
             BoxWithConstraints {
                 val availableWidth = maxWidth
                 // "Reset" button
@@ -91,7 +86,7 @@ fun HomePage(list: ArrayList<Chord>) {
                         generate.intValue = 0
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
-                    modifier = Modifier.width(availableWidth /4)
+                    modifier = Modifier.width(availableWidth / 4)
                 ) {
                     Text(
                         stringResource(id = R.string.reset),
@@ -103,9 +98,6 @@ fun HomePage(list: ArrayList<Chord>) {
                     )
                 }
             }
-
-
-
 
             // "Generate" button
             Button(

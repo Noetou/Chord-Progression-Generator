@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                                 color = Color(0xFF252B48)
                             ),
                             modifier = Modifier
-                                .padding(start = 30.dp, top = 30.dp, end = 30.dp )
+                                .padding(start = 30.dp, top = 30.dp, end = 30.dp)
                                 .fillMaxWidth()
                                 .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                                 .padding(15.dp)

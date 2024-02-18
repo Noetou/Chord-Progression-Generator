@@ -11,7 +11,7 @@ class AudioPlayerForMediaPlayer(private val context: Context) : AudioPlayer {
     }
 
     override fun stop() {
-        if(mediaPlayer?.isPlaying == true){
+        if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.stop()
         }
         mediaPlayer?.release()
