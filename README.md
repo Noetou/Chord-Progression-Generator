@@ -6,7 +6,7 @@ Press the *Generate* button to create a progression of 4 chords along with their
 
 Press the button again to generate a new sequence of chords!
 
-![image](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/58b3de44-9001-404f-8555-84d49632c800)
+![HomePage](https://github.com/Noetou/Chord-Progression-Generator/assets/122117506/f64a39e6-1fe6-4e92-94be-b1cb1f09f113)
 
 
 ### Endless possibilities 
