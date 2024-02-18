@@ -1,4 +1,4 @@
-package com.example.test
+package com.chordsGenerator.app
 
 
 import android.os.Bundle
@@ -47,10 +47,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.test.ui.theme.TestTheme
+import com.chordsGenerator.app.ui.theme.TestTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -318,8 +317,9 @@ fun DisplayChords(
         ) {
 
             itemsIndexed(usedChords) { index, chord ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (chord != null) {
+
+                if (chord != null) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(
                             painterResource(id = chord.getTab()),
                             chord.getName(),
@@ -354,19 +354,19 @@ fun DisplayChords(
                                     )
                                 })
                         }
-
-
-                    } else {
-                        Image(
-                            painterResource(id = R.drawable.plus),
-                            "chord 1",
-                            modifier = Modifier
-                                .height((availableHeight - 200.dp) / 4)
-                                .width((availableWidth - 200.dp) / 4)
-                                .clickable { openDialog(index) }
-                        )
                     }
+
+                } else {
+                    Image(
+                        painterResource(id = R.drawable.plus),
+                        "chord 1",
+                        modifier = Modifier
+                            .height((availableHeight - 200.dp) / 4)
+                            .width((availableWidth - 200.dp) / 4)
+                            .clickable { openDialog(index) }
+                    )
                 }
+
             }
         }
     }

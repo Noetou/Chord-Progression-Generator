@@ -1,4 +1,4 @@
-package com.example.test
+package com.chordsGenerator.app
 
 import android.media.MediaPlayer
 import androidx.compose.runtime.Composable

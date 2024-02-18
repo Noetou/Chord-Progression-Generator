@@ -1,7 +1,6 @@
-package com.example.test
+package com.chordsGenerator.app
 
 import android.media.MediaPlayer
-import android.provider.MediaStore.Audio.Media
 
 class Chord(
     private val name: String,

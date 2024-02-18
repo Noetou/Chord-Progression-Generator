@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test"
+    namespace = "com.chordsGenerator.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.test"
+        applicationId = "com.chordsGenerator.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

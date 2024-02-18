@@ -1,4 +1,4 @@
-package com.example.test
+package com.chordsGenerator.app
 
 import org.junit.Test
 
