@@ -21,8 +21,13 @@ fun generateChords(
     }
 
 
-    val chordsList = list
-    chordsList.removeAll(usedChords.toSet())
+    val chordsList = ArrayList<Chord>()
+    for(c in list ){
+        if(!usedChords.contains(c)){
+            chordsList.add(c)
+
+        }
+    }
 
     // "if (generate > 0)" ensure the method doesn't display chords on the starting page
     if (generate > 0) {
