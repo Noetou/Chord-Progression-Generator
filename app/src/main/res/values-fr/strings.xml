@@ -4,7 +4,7 @@
     <string name="app_name">Générateur d\'accords</string>
     <string name="title">Générateur de progression d\'accords</string>
     <string name="generate">Générer</string>
-    <string name="reset">Générateur d\'accords</string>
+    <string name="reset">Réinitialiser</string>
     <string name="none">Aucun</string>
     <string name="chose_chord">Choisir un accord</string>
     <string name="close">Fermer</string>
