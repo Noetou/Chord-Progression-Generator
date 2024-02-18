@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_main">Générateur d\'accord</string>
-    <string name="app_name">Chords Generator</string>
+    <string name="title_activity_main">Générateur d\'accords</string>
+    <string name="app_name">Générateur d\'accords</string>
     <string name="title">Générateur de progression d\'accords</string>
     <string name="generate">Générer</string>
-    <string name="reset">Réinitialiser</string>
+    <string name="reset">Générateur d\'accords</string>
     <string name="none">Aucun</string>
     <string name="chose_chord">Choisir un accord</string>
     <string name="close">Fermer</string>

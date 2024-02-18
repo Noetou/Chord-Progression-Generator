@@ -86,7 +86,7 @@ fun HomePage(list: ArrayList<Chord>) {
                         generate.intValue = 0
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B)),
-                    modifier = Modifier.width(availableWidth / 4)
+                    modifier = Modifier.width(availableWidth / 2)
                 ) {
                     Text(
                         stringResource(id = R.string.reset),
