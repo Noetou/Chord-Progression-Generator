@@ -34,6 +34,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -65,36 +66,31 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xFF445069)
                 ) {
-                    Column(Modifier.fillMaxWidth()) {
+                    Column {
                         // Header
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
+
+                        Text(
+                            stringResource(id = R.string.title),
+                            style = TextStyle(
+                                fontSize = 24.sp,
+                                fontFamily = FontFamily.Serif,
+                                textAlign = TextAlign.Center,
+                                color = Color(0xFF252B48)
+                            ),
                             modifier = Modifier
                                 .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
                                 .fillMaxWidth()
                                 .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                                 .padding(15.dp)
-                        ) {
-                            Text(
-                                stringResource(id = R.string.title),
-                                style = TextStyle(
-                                    fontSize = 24.sp,
-                                    fontFamily = FontFamily.Serif,
-                                    textAlign = TextAlign.Center,
-                                    color = Color(0xFF252B48)
-                                )
-                            )
-                        }
-                        Spacer(Modifier.weight(1f))
+                        )
+
 
                         // Display the starting page
                         HomePage(chordList)
-                        Spacer(Modifier.weight(1f))
 
 
                     }
                 }
-
             }
         }
     }
@@ -114,30 +110,25 @@ fun OnCreatePreview() {
         ) {
             Column {
                 // Header
-                Row(
-                    Modifier
+
+                Text(
+                    stringResource(id = R.string.title),
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily.Serif,
+                        textAlign = TextAlign.Center,
+                        color = Color(0xFF252B48)
+                    ),
+                    modifier = Modifier
                         .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
                         .fillMaxWidth()
                         .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                         .padding(15.dp)
-                ) {
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        stringResource(id = R.string.title),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontFamily = FontFamily.Serif,
-                            textAlign = TextAlign.Center,
-                            color = Color(0xFF252B48)
-                        )
-                    )
-                    Spacer(Modifier.weight(1f))
-                }
-                Spacer(Modifier.weight(1f))
+                )
+
 
                 // Display the starting page
                 HomePage(chordList)
-                Spacer(Modifier.weight(1f))
 
 
             }
@@ -274,18 +265,14 @@ fun ChoseOneChord(
  */
 fun generateChords(
     list: ArrayList<Chord>,
-    firstChord: Chord?,
-    secondChord: Chord?,
-    thirdChord: Chord?,
-    fourthChord: Chord?,
+    chordsStateList: ArrayList<MutableState<Chord?>>,
     generate: Int,
 ): ArrayList<Chord?> {
     // Add all four chords to a list, if a chord hasn't been set by the user beforehand, the chord is null
     val usedChords = ArrayList<Chord?>()
-    usedChords.add(firstChord)
-    usedChords.add(secondChord)
-    usedChords.add(thirdChord)
-    usedChords.add(fourthChord)
+    for (elt in chordsStateList) {
+        usedChords.add(elt.value)
+    }
 
     // The logic if a chord is null
 
@@ -340,10 +327,7 @@ fun generateChords(
 @Composable
 fun DisplayChords(
     list: ArrayList<Chord>,
-    firstChord: Chord?,
-    secondChord: Chord?,
-    thirdChord: Chord?,
-    fourthChord: Chord?,
+    chordsStateList: ArrayList<MutableState<Chord?>>,
     generate: Int,
     openDialog: (Int) -> Unit,
     soundButtonOnClick: (Chord) -> Unit
@@ -351,7 +335,7 @@ fun DisplayChords(
 
 
     val usedChords =
-        generateChords(list, firstChord, secondChord, thirdChord, fourthChord, generate)
+        generateChords(list, chordsStateList, generate)
 
 
     // Display the grid based on "generate"'s value
@@ -425,15 +409,14 @@ fun DisplayChords(
 @Composable
 fun HomePage(list: ArrayList<Chord>) {
     val player = AudioPlayerForMediaPlayer(LocalContext.current)
+
+    val chordsStateList = arrayListOf<MutableState<Chord?>>(
+        remember { mutableStateOf(null) }, // the value of the first chord
+        remember { mutableStateOf(null) }, // the value of the second chord
+        remember { mutableStateOf(null) }, // the value of the third chord
+        remember { mutableStateOf(null) }) // the value of the fourth chord
     val generate = remember { mutableIntStateOf(0) } // handles the reset of the application
-    val firstChord =
-        remember { mutableStateOf<Chord?>(null) } // remembers the value of the first chord
-    val secondChord =
-        remember { mutableStateOf<Chord?>(null) } // remembers the value of the second chord
-    val thirdChord =
-        remember { mutableStateOf<Chord?>(null) } // remembers the value of the third chord
-    val fourthChord =
-        remember { mutableStateOf<Chord?>(null) } // remembers the value of the fourth chord
+
     val dialog =
         remember { mutableStateOf(false) } // remembers whether the AlertDialog is shown or not
     val slot =
@@ -447,12 +430,7 @@ fun HomePage(list: ArrayList<Chord>) {
 
     // when a chord is selected, put its value into the right chord depending on the chosen slot
     val selectChord: (Chord?) -> Unit = { chord ->
-        when (slot.intValue) {
-            0 -> firstChord.value = chord
-            1 -> secondChord.value = chord
-            2 -> thirdChord.value = chord
-            3 -> fourthChord.value = chord
-        }
+        chordsStateList[slot.intValue].value = chord
         dialog.value = false
     }
 
@@ -473,10 +451,7 @@ fun HomePage(list: ArrayList<Chord>) {
                 Spacer(modifier = Modifier.weight(1f))
                 DisplayChords(
                     list,
-                    firstChord.value,
-                    secondChord.value,
-                    thirdChord.value,
-                    fourthChord.value,
+                    chordsStateList,
                     generate.intValue,
                     openDialog,
                     fun(chord: Chord) {
@@ -497,10 +472,9 @@ fun HomePage(list: ArrayList<Chord>) {
                         // "Reset" button
                         Button(
                             onClick = {
-                                firstChord.value = null
-                                secondChord.value = null
-                                thirdChord.value = null
-                                fourthChord.value = null
+                                for (elt in chordsStateList) {
+                                    elt.value = null
+                                }
                                 generate.intValue = 0
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B9A8B))

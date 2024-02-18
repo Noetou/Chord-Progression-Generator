@@ -2,18 +2,18 @@ import android.content.Context
 import android.media.MediaPlayer
 
 class AudioPlayerForMediaPlayer(private val context: Context) : AudioPlayer {
-    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
 
     override fun play(audioResourceId: Int) {
         stop()
         mediaPlayer = MediaPlayer.create(context, audioResourceId)
-        mediaPlayer?.start()
+        mediaPlayer.start()
     }
 
     override fun stop() {
-        if(mediaPlayer!!.isPlaying){
-            stop()
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.stop()
         }
-        mediaPlayer!!.release()
+        mediaPlayer.release()
     }
 }
