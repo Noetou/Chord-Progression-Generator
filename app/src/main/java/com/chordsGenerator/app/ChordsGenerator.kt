@@ -1,6 +1,7 @@
 package com.chordsGenerator.app
 
 
+import AudioPlayerForMediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,12 +42,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chordsGenerator.app.ui.theme.TestTheme
@@ -62,16 +65,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xFF445069)
                 ) {
-                    Column {
+                    Column(Modifier.fillMaxWidth()) {
                         // Header
                         Row(
-                            Modifier
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
                                 .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
                                 .fillMaxWidth()
                                 .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
                                 .padding(15.dp)
                         ) {
-                            Spacer(Modifier.weight(1f))
                             Text(
                                 stringResource(id = R.string.title),
                                 style = TextStyle(
@@ -81,7 +84,6 @@ class MainActivity : ComponentActivity() {
                                     color = Color(0xFF252B48)
                                 )
                             )
-                            Spacer(Modifier.weight(1f))
                         }
                         Spacer(Modifier.weight(1f))
 
@@ -95,6 +97,52 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+}
+
+
+@Preview
+@Composable
+fun OnCreatePreview() {
+
+    // To generate the list of chords
+    val chordList = ChordsUtils.generateChordList() // get the list of all the chords
+    TestTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(0xFF445069)
+        ) {
+            Column {
+                // Header
+                Row(
+                    Modifier
+                        .padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 150.dp)
+                        .fillMaxWidth()
+                        .background(Color(0xFFF7E987), shape = RoundedCornerShape(20.dp))
+                        .padding(15.dp)
+                ) {
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        stringResource(id = R.string.title),
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontFamily = FontFamily.Serif,
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFF252B48)
+                        )
+                    )
+                    Spacer(Modifier.weight(1f))
+                }
+                Spacer(Modifier.weight(1f))
+
+                // Display the starting page
+                HomePage(chordList)
+                Spacer(Modifier.weight(1f))
+
+
+            }
+        }
+
     }
 }
 
@@ -151,7 +199,7 @@ fun ChoseOneChord(
                         val filteredList = mutableListOf<Chord>()
 
                         for (accord in list) {
-                            if (accord.getName().contains(searchQuery, ignoreCase = true)) {
+                            if (accord.name.contains(searchQuery, ignoreCase = true)) {
                                 filteredList.add(accord)
                             }
                         }
@@ -164,8 +212,8 @@ fun ChoseOneChord(
                                 modifier = Modifier.padding(horizontal = 10.dp)
                             ) {
                                 Image(
-                                    painterResource(id = accord.getTab()),
-                                    contentDescription = accord.getName(),
+                                    painterResource(id = accord.tab),
+                                    contentDescription = accord.name,
 
                                     modifier = Modifier
                                         .size(80.dp)
@@ -174,7 +222,7 @@ fun ChoseOneChord(
                                         }
                                 )
                                 Text(
-                                    text = accord.getName(),
+                                    text = accord.name,
                                     style = TextStyle(
                                         fontFamily = FontFamily.Serif,
                                         color = Color(0xFF252B48)
@@ -252,14 +300,14 @@ fun generateChords(
                     /* Ensure that the same chord can't be present twice in the same progression if not chosen by the user,
                     *  and that the chosen chord is in the scale of the firstChord */
 
-                    while (usedChords.contains(chord) || !usedChords[0]?.getScale()
-                            ?.contains(chord.getName())!!
+                    while (usedChords.contains(chord) || !usedChords[0]?.scale
+                            ?.contains(chord.name)!!
                     ) {
                         val chordName =
-                            usedChords[0]?.getScale()
-                                ?.get((0..<(usedChords[0]?.getScale()?.size!!)).random())
+                            usedChords[0]?.scale
+                                ?.get((0..<(usedChords[0]?.scale?.size!!)).random())
                         for (c in list) {
-                            if (c.getName() == chordName) {
+                            if (c.name == chordName) {
                                 chord = c
                             }
                         }
@@ -269,7 +317,7 @@ fun generateChords(
                 else if (usedChords[1] != null || usedChords[2] != null || usedChords[3] != null) {
                     for (c in usedChords) {
                         if (c != null) {
-                            while (!chord.getScale().contains(c.getName())) {
+                            while (!chord.scale.contains(c.name)) {
                                 chord = list[(0..<list.size).random()]
                             }
                         }
@@ -321,8 +369,8 @@ fun DisplayChords(
                 if (chord != null) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(
-                            painterResource(id = chord.getTab()),
-                            chord.getName(),
+                            painterResource(id = chord.tab),
+                            chord.name,
                             modifier = Modifier
                                 .height((availableHeight - 100.dp) / 4)
                                 .width((availableWidth - 100.dp) / 4)
@@ -331,7 +379,7 @@ fun DisplayChords(
 
 
                         Text(
-                            chord.getName(),
+                            chord.name,
                             Modifier.padding(horizontal = 65.dp),
                             style = TextStyle(
                                 fontSize = 20.sp,
@@ -340,20 +388,20 @@ fun DisplayChords(
                                 color = Color(0xFF252B48)
                             ),
                         )
-                        if (chord.getMediaPlayer() != null) {
-                            Button(onClick = { soundButtonOnClick(chord) },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(
-                                        0xFF5B9A8B
-                                    )
-                                ),
-                                content = {
-                                    Icon(
-                                        painterResource(id = R.drawable.volume_up),
-                                        contentDescription = chord.getName()
-                                    )
-                                })
-                        }
+
+                        Button(onClick = { soundButtonOnClick(chord) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(
+                                    0xFF5B9A8B
+                                )
+                            ),
+                            content = {
+                                Icon(
+                                    painterResource(id = R.drawable.volume_up),
+                                    contentDescription = chord.name
+                                )
+                            })
+
                     }
 
                 } else {
@@ -376,6 +424,7 @@ fun DisplayChords(
 // Recreate the page each time the activity is refreshed
 @Composable
 fun HomePage(list: ArrayList<Chord>) {
+    val player = AudioPlayerForMediaPlayer(LocalContext.current)
     val generate = remember { mutableIntStateOf(0) } // handles the reset of the application
     val firstChord =
         remember { mutableStateOf<Chord?>(null) } // remembers the value of the first chord
@@ -432,14 +481,7 @@ fun HomePage(list: ArrayList<Chord>) {
                     openDialog,
                     fun(chord: Chord) {
 
-                        if (chord.getMediaPlayer() != null) {
-                            if (chord.getMediaPlayer()!!.isPlaying) {
-                                chord.getMediaPlayer()!!.pause()
-                                chord.getMediaPlayer()!!.seekTo(0)
-                            } else {
-                                chord.getMediaPlayer()!!.start()
-                            }
-                        }
+                        player.play(chord.sound)
 
                     }
                 )
