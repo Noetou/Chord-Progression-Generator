@@ -8,5 +8,6 @@
     <string name="chose_chord">Choose a chord</string>
     <string name="close">Close</string>
     <string name="search">Search</string>
+    <string name="help">Generate 4 chords with the \"generate\" button !  You can also tap on a slot to chose the chord you want, it will stay on the slot you chose when generating the other chords. You can chose a chord for every slot at the same time!</string>
 
 </resources>

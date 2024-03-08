@@ -1,30 +1,47 @@
 package com.chordsGenerator.app
 
 import AudioPlayerForMediaPlayer
+
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 // Recreate the page each time the activity is refreshed
 @Composable
@@ -55,14 +72,57 @@ fun HomePage(list: ArrayList<Chord>) {
         dialog.value = false
     }
 
+
+    val shouldShowHelp = remember { mutableStateOf(false) }
+
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         // Show chords list and allow the user to choose the first chord of the progression
         if (dialog.value) {
             ChoseOneChord(list, closeDialog, selectChord)
 
         } else {
+            Column(modifier = Modifier.align(Alignment.End)) {
+                Button(
+                    onClick = {
+                        shouldShowHelp.value = !shouldShowHelp.value
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF445069)),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 10.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.help_icon),
+                        contentDescription = R.drawable.help_icon.toString(),
+                        Modifier.size(50.dp)
+                    )
+                }
+                if(shouldShowHelp.value){
+                    Box(modifier = Modifier) {
+                        Surface(
+                            color = Color(0xFFF7E987),
+                            shape = MaterialTheme.shapes.medium,
+                            modifier = Modifier
+                                .width(400.dp)
+                                .padding(20.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.help),
+                                color = Color.Black,
+                                textAlign = TextAlign.Justify,
+                                modifier = Modifier.padding(15.dp),
+                                fontSize = 14.sp
+
+                            )
+                        }
+                    }
+                }
+            }
             Spacer(modifier = Modifier.weight(1f))
             Display(
                 list,

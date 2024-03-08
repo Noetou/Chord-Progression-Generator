@@ -9,4 +9,5 @@
     <string name="chose_chord">Choisir un accord</string>
     <string name="close">Fermer</string>
     <string name="search">Rechercher</string>
+    <string name="help">Générez 4 accords avec le bouton \"générer\" ! Vous pouvez également appuyer sur une case pour choisir l\'accord que vous souhaitez, il restera sur la case que vous avez choisie lors de la génération des autres accords. Vous pouvez choisir un accord pour chaque case en même temps !</string>
 </resources>
